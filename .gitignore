@@ -1,0 +1,68 @@
+# Sistema y editores
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python y entornos locales
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+.ipython/
+.jupyter/
+
+# Configuración privada
+.env
+.env.*
+!.env.example
+
+# Datos: conservar la estructura, sin versionar los datasets
+/data/raw/*
+!/data/raw/.gitkeep
+/data/processed/*
+!/data/processed/.gitkeep
+
+# Artefactos transitorios de experimentos
+/results/raw/
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.joblib
+*.sqlite
+*.sqlite3
+wandb/
+mlruns/
+
+# Exportaciones temporales e intermedios de LaTeX
+/build/
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+_minted-*/

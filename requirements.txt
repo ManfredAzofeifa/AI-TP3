@@ -1,0 +1,12 @@
+# Base inicial para el notebook; versiones y compatibilidad por validar
+# con la versión de Python que acuerden las tres personas.
+jupyterlab
+ipykernel
+numpy
+pandas
+matplotlib
+scipy
+scikit-learn
+
+# Agregar otras bibliotecas solo cuando se acuerde su uso en el notebook.
+# Las pruebas pueden usar unittest, incluido en Python.
