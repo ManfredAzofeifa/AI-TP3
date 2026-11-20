@@ -27,7 +27,7 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
 | P1 | — | — | Sin iniciar |
-| P2 | — | — | Sin iniciar |
+| P2 | T2a (investigación §3.2 b) y T6 (ECE) | `p2/t2a-r2` y `p2/t6-ece` | En curso; T2a espera el generador (D4) y el contrato de la red (T0) |
 | P3 | — | — | Sin iniciar |
 
 - **Siguiente acción:** T0 con los tres: nombres, herramientas, contratos y
@@ -173,8 +173,10 @@ decisiones tomadas:
   configuraciones (D = 2, K según D3, α = 0.01, M ∈ {20, 2}, γ ∈ {0, un valor
   no nulo documentado}) en ambos escenarios con P = 50 iteraciones, y el de
   las curvas, la tabla de gráficas y la tabla de errores finales.
-- [ ] Investigar la relación entre neuronas ocultas y de entrada, y reunir
-  los artículos científicos que se citarán.
+- [x] Investigar la relación entre neuronas ocultas y de entrada, y reunir
+  los artículos científicos que se citarán. Redactado en la celda
+  `s3-investigacion-neuronas` con seis referencias cuyos datos se verificaron
+  en línea; las preguntas que dependen de resultados quedan para T2b.
 - [ ] Integrar en `main` lo que no depende de resultados.
 
 ### T2b — P2: ejecución y análisis R² (fase 2, requiere T1)
@@ -294,6 +296,7 @@ Consultar las páginas indicadas del PDF y registrar el acuerdo al resolverlas.
 | 2026-11-18 | Preparación del repositorio | Revisados la estructura del TP1 y las cinco páginas del enunciado. Creada la base sin avances. Verificados el formato del notebook único y vacío, la identidad del PDF, los enlaces locales y las exclusiones de Git. Las dependencias de los experimentos siguen pendientes de validar. | T0: asignar nombres, materiales e interpretaciones. |
 | 2026-11-18 | Simplificación de documentación | Centralizadas las indicaciones en el README general y retirados los cinco README de subcarpetas. Se conserva la estructura con archivos vacíos. | T0 sigue pendiente. |
 | 2026-11-20 | P2 (reorganización) | Reemplazada la secuencia en cascada por un plan en paralelo según las dependencias reales del enunciado. Asignada a P3 la preparación de datos UNSW-NB15. Agregados contratos entre secciones, reglas de congruencia de salidas, flujo por ramas con nbstripout y nbdime, y esqueleto de encabezados en el notebook. No se ejecutó código ni se instalaron las herramientas. | T0: aprobar el reparto entre los tres, instalar herramientas y acordar contratos. |
+| 2026-11-20 | P2 (T2a, rama `p2/t2a-r2`) | Redactada la investigación de §3.2 b (neuronas ocultas frente a entradas) con referencias a Hornik et al. 1989, Sartori y Antsaklis 1991, Huang 2003, Barron 1994, Sheela y Deepa 2013 y Stathakis 2009; autores, revista, volumen, páginas y DOI comprobados en fuentes en línea. Solo Markdown; no se ejecutó código. El resto de T2a espera `generar_datos_R2` (D4) y el contrato de la red (T0). | Conseguir el generador y el material de apoyo de ECE; acordar contratos en T0. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
