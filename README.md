@@ -14,9 +14,10 @@ Indica entrega el **domingo 29 de noviembre de 2026**; no especifica hora.
 
 ## Por dónde comenzar
 
-1. Leer [JOURNAL.md](JOURNAL.md): reparto, secuencia, pendientes y dudas del PDF.
-2. Asignar los nombres a P1, P2 y P3 y acordar el primer turno.
-3. Seguir [CONTRIBUTING.md](CONTRIBUTING.md) para compartir los cambios.
+1. Leer [JOURNAL.md](JOURNAL.md): reparto, dependencias, pendientes y dudas del PDF.
+2. Asignar los nombres a P1, P2 y P3 y completar T0 (acuerdos y contratos).
+3. Seguir [CONTRIBUTING.md](CONTRIBUTING.md): cada persona trabaja en su rama
+   y en sus secciones del notebook, e integra en `main` de una en una.
 
 [AGENTS.md](AGENTS.md) indica a los asistentes que deben revisar el journal
 antes de trabajar y actualizarlo al terminar.
@@ -24,8 +25,9 @@ antes de trabajar y actualizarlo al terminar.
 ## Una sola solución
 
 El archivo [notebooks/tp3_redes_neuronales.ipynb](notebooks/tp3_redes_neuronales.ipynb)
-es el único notebook del proyecto y se entrega inicialmente vacío. `.ipynb`
-es la extensión estándar de los notebooks de Jupyter.
+es el único notebook del proyecto. Inicialmente contiene solo un encabezado
+por sección, con su responsable, sin código ni respuestas. `.ipynb` es la
+extensión estándar de los notebooks de Jupyter.
 
 Allí se escribirán todas las respuestas, implementaciones, pruebas unitarias,
 gráficas, tablas, referencias y conclusiones. No habrá soluciones en módulos
@@ -41,7 +43,7 @@ por ahora se respeta el trabajo en un único notebook y no se genera otro inform
 AI-TP3/
 ├── .github/pull_request_template.md  # Plantilla opcional y breve
 ├── AGENTS.md                        # Instrucciones para asistentes
-├── CONTRIBUTING.md                  # Flujo sencillo por turnos
+├── CONTRIBUTING.md                  # Flujo en paralelo por ramas
 ├── JOURNAL.md                       # Plan, responsables y pendientes
 ├── README.md
 ├── requirements.txt                 # Dependencias iniciales por validar
@@ -52,7 +54,7 @@ AI-TP3/
 │   ├── assignment/TP_3_redes_neuronales.pdf
 │   └── report/sections/.gitkeep      # Reserva de formato de entrega
 ├── notebooks/
-│   └── tp3_redes_neuronales.ipynb    # Vacío, sin código ni resultados
+│   └── tp3_redes_neuronales.ipynb    # Esqueleto de secciones, sin código ni resultados
 ├── results/
 │   ├── figures/.gitkeep
 │   └── tables/.gitkeep
@@ -69,7 +71,7 @@ anterior, porque no son necesarios para iniciar este trabajo.
 
 Los archivos originales de UNSW-NB15 irán en `data/raw/` y los derivados en
 `data/processed/`; su contenido queda fuera de Git. Todavía no se ha seleccionado
-ni descargado el dataset. En T3 se documentarán su fuente, versión, archivos,
+ni descargado el dataset. En T3 (P3) se documentarán su fuente, versión, archivos,
 etiquetas y carga desde la raíz dentro del notebook. El generador de datos de
 R² está pendiente de obtener, según D4 de `JOURNAL.md`.
 
@@ -103,4 +105,5 @@ py -m venv .venv
 .\.venv\Scripts\python.exe -m jupyter lab
 ```
 
-Abrir el notebook y usar el kernel del entorno.
+Abrir el notebook y usar el kernel del entorno. Antes del primer commit,
+configurar nbstripout y nbdime en el clon según [CONTRIBUTING.md](CONTRIBUTING.md).

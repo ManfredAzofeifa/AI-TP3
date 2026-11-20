@@ -8,5 +8,9 @@ matplotlib
 scipy
 scikit-learn
 
+# Herramientas de colaboración sobre el notebook (ver CONTRIBUTING.md).
+nbstripout
+nbdime
+
 # Agregar otras bibliotecas solo cuando se acuerde su uso en el notebook.
 # Las pruebas pueden usar unittest, incluido en Python.

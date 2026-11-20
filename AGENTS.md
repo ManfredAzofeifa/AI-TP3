@@ -2,8 +2,8 @@
 
 Antes de trabajar, leer `JOURNAL.md`, `CONTRIBUTING.md` y el enunciado de
 `docs/assignment/TP_3_redes_neuronales.pdf`. El estado de las tareas, los
-responsables, el turno de edición y las dudas abiertas se mantienen en
-`JOURNAL.md`; revisarlo también antes de dar una tarea por terminada.
+responsables, las dependencias, el trabajo en curso y las dudas abiertas se
+mantienen en `JOURNAL.md`; revisarlo también antes de dar una tarea por terminada.
 
 ## Alcance
 
@@ -24,12 +24,21 @@ responsables, el turno de edición y las dudas abiertas se mantienen en
 
 ## Coordinación
 
-- Trabajar por turnos en el orden de `JOURNAL.md`. Solo una persona edita el
-  notebook a la vez, aunque las tareas sean de secciones distintas.
-- La siguiente persona comienza desde el último estado compartido de `main`.
-  No reorganizar celdas de otra tarea durante un turno sin acordarlo.
-- Actualizar el journal al terminar: tarea, verificaciones, decisiones,
-  pendientes y siguiente responsable. No marcar como hecho lo no ejecutado.
+- El desarrollo es en paralelo, con una rama por tarea según `CONTRIBUTING.md`.
+  Editar solo las celdas de las secciones del notebook que el journal asigna
+  a la persona de la tarea; no mover ni modificar celdas de otras secciones
+  sin acordarlo.
+- Respetar las dependencias del journal: no ejecutar ni reportar resultados
+  que dependan de una tarea todavía no integrada en `main`. El código puede
+  escribirse antes contra los contratos acordados en T0.
+- No cambiar contratos entre secciones ni la configuración común sin
+  registrar el acuerdo en el journal.
+- Versionar el notebook sin salidas (nbstripout) hasta la ejecución final de
+  T8. Cada sección usa su propia semilla y nombres de variables con prefijo.
+- Integrar en `main` de una persona a la vez, después de actualizar la rama
+  con `main`.
+- Actualizar el journal al integrar: tarea, verificaciones, decisiones,
+  pendientes y a quién se desbloquea. No marcar como hecho lo no ejecutado.
 - Si una duda del enunciado afecta la implementación, registrarla y documentar
   el acuerdo antes de aplicar una interpretación. No resolverla silenciosamente.
 
@@ -40,7 +49,7 @@ responsables, el turno de edición y las dudas abiertas se mantienen en
   ya entrenado de una biblioteca. Las bibliotecas de apoyo se acuerdan al inicio.
 - Documentar funciones y sus pruebas dentro del notebook; consultar el journal
   para los mínimos exigidos y las inconsistencias del enunciado.
-- Reiniciar el kernel y ejecutar todas las celdas antes de entregar el turno
+- Reiniciar el kernel y ejecutar todas las celdas antes de integrar una tarea
   con código. Registrar si algo no pudo ejecutarse y por qué.
 - Mantener los datos completos y artefactos transitorios fuera de Git. Registrar
   su origen, preparación y rutas para que otra persona pueda reproducirlos.
