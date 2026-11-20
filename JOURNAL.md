@@ -27,7 +27,7 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
 | P1 | — | — | Sin iniciar |
-| P2 | T2a (investigación §3.2 b) y T6 (ECE) | `p2/t2a-r2` y `p2/t6-ece` | En curso; T2a espera el generador (D4) y el contrato de la red (T0) |
+| P2 | T2a (resto de §3) | — | En espera del generador (D4) y del contrato de la red (T0). La investigación de §3.2 b y el ECE de T6 ya están integrados en `main` |
 | P3 | — | — | Sin iniciar |
 
 - **Siguiente acción:** T0 con los tres: nombres, herramientas, contratos y
@@ -237,7 +237,8 @@ decisiones tomadas:
 - [x] Diseñar, ejecutar y explicar al menos dos pruebas unitarias de ECE con
   datos sintéticos de resultado conocido: 13 pruebas que cubren las cuatro funciones.
 - [ ] Revisión de P3 del contrato ensamble → ECE (sobre todo `predictions`).
-- [ ] Integrar en `main` y avisar a P3.
+- [x] Integrar en `main` y avisar a P3. Integrado el 2026-11-20 antes de la
+  revisión de P3; si P3 cambia el contrato, se ajusta en una rama nueva.
 
 ### T7 — P3: ECE, costo de ejecución y comparación de ensambles (fase 2)
 
@@ -306,6 +307,7 @@ Consultar las páginas indicadas del PDF y registrar el acuerdo al resolverlas.
 | 2026-11-20 | P2 (reorganización) | Reemplazada la secuencia en cascada por un plan en paralelo según las dependencias reales del enunciado. Asignada a P3 la preparación de datos UNSW-NB15. Agregados contratos entre secciones, reglas de congruencia de salidas, flujo por ramas con nbstripout y nbdime, y esqueleto de encabezados en el notebook. No se ejecutó código ni se instalaron las herramientas. | T0: aprobar el reparto entre los tres, instalar herramientas y acordar contratos. |
 | 2026-11-20 | P2 (T2a, rama `p2/t2a-r2`) | Redactada la investigación de §3.2 b (neuronas ocultas frente a entradas) con referencias a Hornik et al. 1989, Sartori y Antsaklis 1991, Huang 2003, Barron 1994, Sheela y Deepa 2013 y Stathakis 2009; autores, revista, volumen, páginas y DOI comprobados en fuentes en línea. Solo Markdown; no se ejecutó código. El resto de T2a espera `generar_datos_R2` (D4) y el contrato de la red (T0). | Conseguir el generador y el material de apoyo de ECE; acordar contratos en T0. |
 | 2026-11-20 | P2 (T6, rama `p2/t6-ece`) | Agregado el material de apoyo `docs/assignment/EstimacionIncertidumbre.pdf` y registrados los acuerdos de D6. Implementado el ECE de §4.3 con tres funciones auxiliares y 13 pruebas unitarias. Notebook ejecutado desde un kernel limpio con `jupyter nbconvert --execute` (copia fuera del repositorio): 13/13 pruebas correctas. Entorno: Python 3.14.7 y NumPy 2.5.5 en `.venv` local. **Bloqueo:** en esta máquina, el Control de aplicaciones de Windows impide cargar la DLL `_fblas` de SciPy, por lo que no se pueden importar SciPy ni scikit-learn. §4.3 no los usa, pero §3 (partición con `sklearn`) y las pruebas estadísticas de §4.1 y §4.4 sí. | P3 revisa el contrato ensamble → ECE; en T0, comprobar SciPy y scikit-learn en las otras máquinas y buscar una solución para esta. |
+| 2026-11-20 | P2 (integración) | Integradas en `main` las ramas `p2/t2a-r2` y `p2/t6-ece`. El único conflicto fue el de las dos filas agregadas al registro; se conservaron ambas. Notebook integrado ejecutado desde un kernel limpio con `jupyter nbconvert --execute` (copia fuera del repositorio): 13/13 pruebas de §4.3 correctas. | P3 revisa el contrato ensamble → ECE; T0 sigue pendiente. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
