@@ -51,7 +51,9 @@ AI-TP3/
 │   ├── raw/.gitkeep                 # Datos originales locales
 │   └── processed/.gitkeep           # Datos preparados locales
 ├── docs/
-│   ├── assignment/TP_3_redes_neuronales.pdf
+│   ├── assignment/
+│   │   ├── TP_3_redes_neuronales.pdf      # Enunciado
+│   │   └── EstimacionIncertidumbre.pdf    # Material de apoyo: ensambles y ECE
 │   └── report/sections/.gitkeep      # Reserva de formato de entrega
 ├── notebooks/
 │   └── tp3_redes_neuronales.ipynb    # Esqueleto de secciones, sin código ni resultados

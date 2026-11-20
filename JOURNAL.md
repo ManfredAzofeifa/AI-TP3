@@ -113,7 +113,10 @@ decisiones tomadas:
 - **Ensamble → ECE (§4.2 → §4.3 y §4.4):** qué devuelven `run_ensemble_uq`
   y `quantify_uncertainty_ensemble` (puntajes previos a la activación,
   varianza por muestra, formas) y qué recibe
-  `calculate_expected_calibration_error` (D6).
+  `calculate_expected_calibration_error` (D6). Propuesta de P2, pendiente de
+  revisión de P3: el ECE recibe `X`, `y`, `uncertainties` (varianza por
+  observación, forma (n,)) y `predictions` (etiquetas predichas con los
+  puntajes previos a la activación, forma (n,)).
 - **Configuración común (sección 0):** una semilla por sección, rutas de
   datos, bandera de L2 y, si se acuerda, un modo de ejecución reducida para
   el desarrollo; la ejecución final usa los valores del enunciado.
@@ -224,14 +227,17 @@ decisiones tomadas:
 
 ### T6 — P2: expected calibration error (fase 1)
 
-- [ ] Resolver con el material de apoyo la definición, entradas, intervalos y
+- [x] Resolver con el material de apoyo la definición, entradas, intervalos y
   procedencia de predicciones/puntajes de ECE; registrar el acuerdo D6.
-- [ ] Implementar `calculate_expected_calibration_error(X, y, uncertainties)`
+- [x] Implementar `calculate_expected_calibration_error(X, y, uncertainties)`
   según la definición y el contrato acordados, y documentar la relación con
-  la última capa.
-- [ ] Diseñar, ejecutar y explicar al menos dos pruebas unitarias de ECE con
-  datos sintéticos de resultado conocido.
-- [ ] Ejecutar desde cero, integrar en `main` y avisar a P3.
+  la última capa. Se agregó el parámetro `predictions` (D6) y las funciones
+  auxiliares `uncertainty_to_confidence`, `calibration_bins` y
+  `uncertainty_accuracy_correlation`.
+- [x] Diseñar, ejecutar y explicar al menos dos pruebas unitarias de ECE con
+  datos sintéticos de resultado conocido: 13 pruebas que cubren las cuatro funciones.
+- [ ] Revisión de P3 del contrato ensamble → ECE (sobre todo `predictions`).
+- [ ] Integrar en `main` y avisar a P3.
 
 ### T7 — P3: ECE, costo de ejecución y comparación de ensambles (fase 2)
 
@@ -271,9 +277,9 @@ Consultar las páginas indicadas del PDF y registrar el acuerdo al resolverlas.
 | D1 | 1 | T8 | El PDF pide un ZIP con fuentes LaTeX/LyX, PDF y Jupyter. La organización solicitada por el usuario concentra toda la respuesta en un solo notebook. Confirmar el formato final antes de generar documentos; mientras tanto no se inicia un informe separado. |
 | D2 | 1 | T0, T1, T2a | La firma impresa de `__init__(neurons_per_layer, alpha, max_weights)` omite `gamma`, aunque el listado de argumentos sí lo exige. Acordar y documentar una interfaz coherente. |
 | D3 | 2–4 | T0, T1, T2a, T2b | Se exige softmax de salida y en R² K = 1. Una softmax de un solo componente siempre vale 1 y no permite esa clasificación. Acordar con el docente la salida/representación a utilizar antes de implementar y dejar explícita la interpretación. |
-| D4 | 3 y 5 | T2a, T5, T6 | No se adjuntaron `generar_datos_R2` ni el material de apoyo de ensambles/ECE. Conseguirlos antes de sustituirlos por una implementación supuesta. |
+| D4 | 3 y 5 | T2a | **Parcial.** El material de apoyo de ensambles y ECE ya está en `docs/assignment/EstimacionIncertidumbre.pdf` (sección 2: ensamble entrenado sobre N particiones del entrenamiento e incertidumbre como varianza de las predicciones; sección 4: ECE). Falta `generar_datos_R2`; conseguirlo antes de sustituirlo por una implementación supuesta. |
 | D5 | 2–3 | T1 | Precisar qué variante de descenso del gradiente adaptativo se espera y su relación con momentum. El PDF alterna `get_error`/`evaluar_error` y `train_mlp`/`entrenar_red`. Acordar además cómo reportar “error cero” de XOR frente al MSE. |
-| D6 | 5 | T5, T6 | La firma de ECE no recibe modelo ni predicciones; el texto habla de “pesos” de la última capa y antes usa puntajes previos a activación. Verificar en el material de apoyo qué valores y definición de calibración se esperan. |
+| D6 | 5 | T5, T6 | **Acordado por P2 el 2026-11-20; pendiente de revisión de P3.** Definición del material (§4): ECE = Σ \|B_m\|/N · \|acc(B_m) − s̄(B_m)\|, ignorando cubetas vacías, con puntajes en [0, 1]. El material no fija la conversión de la varianza ni el número de cubetas, y la firma no recibe predicciones. Acuerdos: (1) puntaje s = 1 − varianza normalizada min-max, porque la varianza no está acotada y crece con la falta de confianza; (2) reportar además la correlación de Pearson entre incertidumbre y acierto, alternativa del material; (3) 10 cubetas de igual ancho, configurables; (4) agregar el parámetro `predictions`, con etiquetas obtenidas de la salida de la última capa antes de la activación. |
 | D7 | 4–5 | T7 | §4 anuncia 60 puntos pero sus incisos suman 50. La última instrucción estadística termina en “verifique si existe” sin completar la hipótesis. Confirmar alcance; el plan conserva todos los incisos visibles. |
 
 ## Acuerdos vigentes
@@ -288,6 +294,8 @@ Consultar las páginas indicadas del PDF y registrar el acuerdo al resolverlas.
 - El notebook inicial contiene solo el esqueleto de encabezados por sección,
   sin código ni respuestas. Este journal describe trabajo futuro y no
   constituye una solución de la asignación.
+- ECE de §4.3 según D6: confianza 1 − varianza normalizada, Pearson como
+  complemento, 10 cubetas configurables y parámetro adicional `predictions`.
 
 ## Registro de trabajo
 
@@ -297,6 +305,7 @@ Consultar las páginas indicadas del PDF y registrar el acuerdo al resolverlas.
 | 2026-11-18 | Simplificación de documentación | Centralizadas las indicaciones en el README general y retirados los cinco README de subcarpetas. Se conserva la estructura con archivos vacíos. | T0 sigue pendiente. |
 | 2026-11-20 | P2 (reorganización) | Reemplazada la secuencia en cascada por un plan en paralelo según las dependencias reales del enunciado. Asignada a P3 la preparación de datos UNSW-NB15. Agregados contratos entre secciones, reglas de congruencia de salidas, flujo por ramas con nbstripout y nbdime, y esqueleto de encabezados en el notebook. No se ejecutó código ni se instalaron las herramientas. | T0: aprobar el reparto entre los tres, instalar herramientas y acordar contratos. |
 | 2026-11-20 | P2 (T2a, rama `p2/t2a-r2`) | Redactada la investigación de §3.2 b (neuronas ocultas frente a entradas) con referencias a Hornik et al. 1989, Sartori y Antsaklis 1991, Huang 2003, Barron 1994, Sheela y Deepa 2013 y Stathakis 2009; autores, revista, volumen, páginas y DOI comprobados en fuentes en línea. Solo Markdown; no se ejecutó código. El resto de T2a espera `generar_datos_R2` (D4) y el contrato de la red (T0). | Conseguir el generador y el material de apoyo de ECE; acordar contratos en T0. |
+| 2026-11-20 | P2 (T6, rama `p2/t6-ece`) | Agregado el material de apoyo `docs/assignment/EstimacionIncertidumbre.pdf` y registrados los acuerdos de D6. Implementado el ECE de §4.3 con tres funciones auxiliares y 13 pruebas unitarias. Notebook ejecutado desde un kernel limpio con `jupyter nbconvert --execute` (copia fuera del repositorio): 13/13 pruebas correctas. Entorno: Python 3.14.7 y NumPy 2.5.5 en `.venv` local. **Bloqueo:** en esta máquina, el Control de aplicaciones de Windows impide cargar la DLL `_fblas` de SciPy, por lo que no se pueden importar SciPy ni scikit-learn. §4.3 no los usa, pero §3 (partición con `sklearn`) y las pruebas estadísticas de §4.1 y §4.4 sí. | P3 revisa el contrato ensamble → ECE; en T0, comprobar SciPy y scikit-learn en las otras máquinas y buscar una solución para esta. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
