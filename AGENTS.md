@@ -18,9 +18,9 @@ mantienen en `JOURNAL.md`; revisarlo también antes de dar una tarea por termina
 - Los Markdown del repositorio son guías de trabajo; no deben responder los
   ejercicios. `results/` solo contiene exportaciones del notebook.
 - Mantener un único `README.md` general en la raíz; no crear README por carpeta.
-- `docs/report/` y `submission/` son reservas para la entrega. La diferencia
-  entre el notebook único acordado y el formato LaTeX/LyX + PDF del enunciado
-  está anotada en `JOURNAL.md`; no iniciar un informe independiente.
+- `docs/report/` recibe el informe LaTeX de T9 y `submission/` el ZIP de
+  entrega. El informe se redacta en T9, con el notebook ya terminado en T8
+  (D1 en `JOURNAL.md`); hasta entonces el trabajo va solo al notebook.
 
 ## Coordinación
 
@@ -33,8 +33,9 @@ mantienen en `JOURNAL.md`; revisarlo también antes de dar una tarea por termina
   escribirse antes contra los contratos acordados en T0.
 - No cambiar contratos entre secciones ni la configuración común sin
   registrar el acuerdo en el journal.
-- Versionar el notebook sin salidas (nbstripout) hasta la ejecución final de
-  T8. Cada sección usa su propia semilla y nombres de variables con prefijo.
+- Versionar el notebook sin salidas hasta la ejecución final de T8: limpiarlas
+  antes de cada commit y revisar `git diff` (ver `CONTRIBUTING.md`). Cada
+  sección usa su propia semilla de `SEEDS` y nombres de variables con prefijo.
 - Integrar en `main` de una persona a la vez, después de actualizar la rama
   con `main`.
 - Actualizar el journal al integrar: tarea, verificaciones, decisiones,
