@@ -26,8 +26,6 @@ nbdime config-git --enable
   celdas en lugar de editar el JSON a mano (`nbdiff`, `nbmerge`,
   `git mergetool --tool nbdime`). `.gitattributes` ya asocia los `.ipynb` con
   sus controladores; el comando registra esos controladores en el clon.
-- **PyCharm** es el editor del equipo. Abrir el notebook con el intérprete del
-  `.venv` del proyecto como kernel.
 - **WSL:** clonar dentro del sistema de archivos de Linux (por ejemplo `~/`),
   no en `/mnt/c`, y usar solo el Git de WSL con ese clon.
 - **Windows:** si el Control de aplicaciones bloquea las bibliotecas de SciPy,
@@ -36,6 +34,41 @@ nbdime config-git --enable
 No se usa nbstripout: renumera los identificadores de celda (`s4-3-pruebas`
 pasa a ser `"14"`) y reescribe todo el archivo. Los identificadores marcan de
 quién es cada celda, así que deben conservarse.
+
+## PyCharm y el kernel del `.venv`
+
+PyCharm es el editor del equipo. Su servidor de Jupyter administrado por el IDE
+arranca el kernel con el intérprete del proyecto, así que **no hace falta
+registrar ni crear kernels**: basta con que el intérprete del proyecto sea el
+`.venv`.
+
+1. Crear el `.venv` según `README.md` y abrir la carpeta del repositorio en
+   PyCharm (*File › Open*).
+2. Elegir el intérprete del proyecto. PyCharm suele detectar el `.venv` solo;
+   si no, en *Settings › Project › Python Interpreter › Add Interpreter › Add
+   Local Interpreter*, elegir el entorno existente:
+   - Linux, macOS o WSL: `.venv/bin/python`. En WSL, con un intérprete de tipo
+     WSL que apunte a esa ruta dentro de la distribución.
+   - Windows: `.venv\Scripts\python.exe`.
+
+   La barra de estado debe mostrar `.venv (3.15.0)`. La carpeta `.idea/` está
+   ignorada por Git, así que esta configuración es de cada persona.
+3. Abrir `notebooks/tp3_redes_neuronales.ipynb`. En la barra del notebook, el
+   servidor debe ser **IDE-Managed Server (Auto)**. Dejarlo así: no ejecutar
+   `ipykernel install`, no elegir otro kernel ni conectar un servidor externo.
+   Así los metadatos del notebook (`kernelspec` `python3`) no cambian.
+4. Ejecutar `s0-config`: debe imprimir Python 3.15.0, las versiones de
+   `requirements.txt` y la raíz del repositorio.
+5. Si se instala algo en el `.venv` o el kernel queda en mal estado,
+   reiniciarlo desde la barra del notebook; sigue siendo el mismo intérprete.
+
+**Antes de cada commit:** botón *Clear All Outputs* de la barra del notebook,
+guardar (Cmd/Ctrl+S) y revisar `git diff`. Comprobado en T0 (macOS): ejecutar,
+limpiar y guardar deja el diff vacío. PyCharm guarda `outputs` y
+`execution_count` después de `source` en las celdas de código, y el
+repositorio ya está en ese formato. Si el notebook se guarda con Jupyter Lab o
+`nbconvert`, ese orden cambia en todas las celdas de código: no hacer commit de
+un notebook guardado así.
 
 ## Flujo de una tarea
 

@@ -28,12 +28,11 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T0 | `p1/t0-acuerdos` | Acuerdos, contratos, entorno y §0 listos; falta la comprobación en PyCharm antes de integrar |
+| P1 | T0 | `p1/t0-acuerdos` | Lista para integrar |
 | P2 | T2a (resto de §3) | — | En espera de la integración de T0 para instalar el entorno fijado. La investigación de §3.2 b y el ECE de T6 ya están integrados en `main` |
 | P3 | — | — | En espera de la integración de T0 para instalar el entorno fijado; luego T3 y T5 |
 
-- **Siguiente acción:** P1 comprueba el guardado en PyCharm e integra T0 en
-  `main`. Después, P2 y P3 instalan el entorno fijado y se abren las ramas de
+- **Siguiente acción:** P1 integra T0 en `main`. Después, P2 y P3 instalan el entorno fijado y se abren las ramas de
   la fase 1.
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
@@ -256,10 +255,11 @@ repiten entre secciones.
   reformateaba todo el archivo. Las salidas se limpian con *Clear All Outputs*
   de PyCharm. Se versionan en `.gitattributes` las líneas de nbdime.
 - [ ] Configurar nbdime en cada clon (`nbdime config-git --enable`).
-- [ ] Comprobar en PyCharm, con el notebook de esta rama: abrir, *Clear All
-  Outputs*, guardar y confirmar que `git diff` queda vacío o solo cambia lo
-  esperado (contadores de ejecución, metadatos de PyCharm, nombre del kernel).
-  Registrar lo que haya que hacer a mano.
+- [x] Comprobar el ciclo en PyCharm (macOS): ejecutar, *Clear All Outputs* y
+  guardar quita salidas, contadores y `ExecuteTime`, y no cambia `kernelspec`.
+  Lo único distinto era el orden de claves de las celdas de código; se guardó
+  el notebook en el formato de PyCharm y el ciclo repetido deja el diff vacío.
+  Instrucciones del kernel del `.venv` en `CONTRIBUTING.md`.
 - [x] Resolver D2, D3 y D5, que afectan el contrato de la red.
 - [x] Resolver D4: los datos de R² se generan con scikit-learn, con
   autorización del docente. El material de apoyo ya está en `docs/assignment/`.
@@ -462,6 +462,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-20 | P2 (T6, rama `p2/t6-ece`) | Agregado el material de apoyo `docs/assignment/EstimacionIncertidumbre.pdf` y registrados los acuerdos de D6. Implementado el ECE de §4.3 con tres funciones auxiliares y 13 pruebas unitarias. Notebook ejecutado desde un kernel limpio con `jupyter nbconvert --execute` (copia fuera del repositorio): 13/13 pruebas correctas. Entorno: Python 3.14.7 y NumPy 2.5.5 en `.venv` local. **Bloqueo:** en esta máquina, el Control de aplicaciones de Windows impide cargar la DLL `_fblas` de SciPy, por lo que no se pueden importar SciPy ni scikit-learn. §4.3 no los usa, pero §3 (partición con `sklearn`) y las pruebas estadísticas de §4.1 y §4.4 sí. | P3 revisa el contrato ensamble → ECE; en T0, comprobar SciPy y scikit-learn en las otras máquinas y buscar una solución para esta. |
 | 2026-11-20 | P2 (integración) | Integradas en `main` las ramas `p2/t2a-r2` y `p2/t6-ece`. El único conflicto fue el de las dos filas agregadas al registro; se conservaron ambas. Notebook integrado ejecutado desde un kernel limpio con `jupyter nbconvert --execute` (copia fuera del repositorio): 13/13 pruebas de §4.3 correctas. | P3 revisa el contrato ensamble → ECE; T0 sigue pendiente. |
 | 2026-11-23 | P1 (T0, rama `p1/t0-acuerdos`) | Acordados los contratos de la red, los datos UNSW-NB15, la comparación L2 y la configuración común; resueltos D1, D2, D3, D5 (salvo XOR) y D8. Fijados Python 3.15.0 y las versiones exactas de `requirements.txt` (PyYAML 6.0.4, porque 6.0.3 no tiene ruedas para 3.15 en Linux ni Windows); el entorno de P1 coincide y `pip install --dry-run --only-binary=:all:` resuelve las dependencias para Linux x64, Windows x64 y macOS arm64 (no es una instalación real en esas máquinas). Retirado nbstripout; versionadas las líneas de nbdime. Agregada la celda `s0-config` y guardado el notebook en el formato de nbformat (indentación de 1 espacio); el resto de las celdas no cambió. Notebook completo ejecutado desde un kernel limpio en macOS arm64 con `jupyter nbconvert --execute` (salida fuera del repositorio): `s0-config` imprime Python 3.15.0 y las versiones fijadas, y 13/13 pruebas de §4.3 correctas. `s0-config` también se comprobó desde la raíz con `TP3_QUICK=1`. Nota: sin activar el `.venv`, `python -m jupyter nbconvert` puede tomar otro `jupyter-nbconvert` del PATH. No se probó todavía en PyCharm, Linux, Windows ni WSL. | P2 y P3 revisan T0, instalan el entorno y comprueban PyCharm; P1 integra. |
+| 2026-11-23 | P1 (T0, rama `p1/t0-acuerdos`) | Registrados los nombres del equipo, D4 (datos de R² con scikit-learn, autorizado por el docente) y la aceptación de P3 del parámetro `predictions` (D6). Comprobado en PyCharm (macOS, intérprete `.venv` 3.15.0, *IDE-Managed Server*): el notebook se ejecuta completo (13/13 pruebas de §4.3) y el ciclo ejecutar, *Clear All Outputs* y guardar deja `git diff` vacío después de guardar el notebook con el orden de claves de PyCharm. Agregadas a `CONTRIBUTING.md` las instrucciones para usar el `.venv` como kernel sin registrar kernels nuevos. No probado en Linux, Windows ni WSL. | P1 integra T0; luego P2 y P3 instalan el entorno fijado. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y

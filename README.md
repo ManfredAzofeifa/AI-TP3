@@ -109,9 +109,9 @@ py -3.15 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Abrir el proyecto en PyCharm, elegir el intérprete del `.venv` y ejecutar la
-celda `s0-config`: imprime las versiones del entorno. Antes del primer commit,
-configurar nbdime según [CONTRIBUTING.md](CONTRIBUTING.md).
+Abrir el proyecto en PyCharm con el `.venv` como intérprete y kernel, y
+configurar nbdime, según [CONTRIBUTING.md](CONTRIBUTING.md) («PyCharm y el
+kernel del `.venv`»). La celda `s0-config` imprime las versiones del entorno.
 
 El informe (T9) necesita una distribución de LaTeX con `latexmk` y el soporte
 de español de `babel`: MacTeX en macOS, TeX Live en Linux.
