@@ -14,9 +14,9 @@ verificado; `[ ]` significa pendiente.
 
 | Etiqueta | Nombre | Secciones del notebook a su cargo |
 | --- | --- | --- |
-| P1 | Por asignar | §1 red base, §2 XOR y §4.1 clasificador UNSW-NB15 con L2 |
-| P2 | Por asignar | §3 clasificador en R² y §4.3 ECE |
-| P3 | Por asignar | Preparación de datos UNSW-NB15, §4.2 ensamble y §4.4 evaluación |
+| P1 | Alejandro Quesada | §1 red base, §2 XOR y §4.1 clasificador UNSW-NB15 con L2 |
+| P2 | Jose Herrera | §3 clasificador en R² y §4.3 ECE |
+| P3 | Manfred Azofeifa | Preparación de datos UNSW-NB15, §4.2 ensamble y §4.4 evaluación |
 
 El reparto suma aproximadamente **30 puntos detallados por persona**: P1
 asume §1 + §2 + §4.1; P2 asume §3 + §4.3; P3 asume §4.2 + §4.4. P3 asume
@@ -28,13 +28,13 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T0 | `p1/t0-acuerdos` | Acuerdos, contratos, entorno y §0 listos; esperan la revisión de P2 y P3 antes de integrar |
-| P2 | T2a (resto de §3) | — | En espera del generador (D4) y de la integración de T0. La investigación de §3.2 b y el ECE de T6 ya están integrados en `main` |
-| P3 | — | — | Revisar T0 (contratos de datos y ensamble → ECE) |
+| P1 | T0 | `p1/t0-acuerdos` | Acuerdos, contratos, entorno y §0 listos; falta la comprobación en PyCharm antes de integrar |
+| P2 | T2a (resto de §3) | — | En espera de la integración de T0 para instalar el entorno fijado. La investigación de §3.2 b y el ECE de T6 ya están integrados en `main` |
+| P3 | — | — | En espera de la integración de T0 para instalar el entorno fijado; luego T3 y T5 |
 
-- **Siguiente acción:** P2 y P3 revisan `p1/t0-acuerdos`, instalan el entorno
-  fijado y completan sus casillas de T0. Luego P1 integra T0 y se abren las
-  ramas de la fase 1.
+- **Siguiente acción:** P1 comprueba el guardado en PyCharm e integra T0 en
+  `main`. Después, P2 y P3 instalan el entorno fijado y se abren las ramas de
+  la fase 1.
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
 
@@ -59,7 +59,7 @@ enunciado:
 | 0 | T0: acuerdos, contratos, herramientas y esqueleto | Los tres; P1 coordina | — | Los tres |
 | 1 | T1a: clase `Multilayer_perceptron` y sus pruebas (§1) | P1 | T0 | P2 |
 | 1 | T1b: XOR (§2) | P1 | T1a | P2 |
-| 1 | T2a: datos R² y código del experimento (§3) | P2 | T0 y generador (D4) | P3 |
+| 1 | T2a: datos R² y código del experimento (§3) | P2 | T0 | P3 |
 | 1 | T3: preparación de datos UNSW-NB15 | P3 | T0 | P1 |
 | 1 | T5: ensamble e incertidumbre (§4.2) | P3 | T0 y material de apoyo (D4) | P2 |
 | 1 | T6: ECE y sus pruebas (§4.3) | P2 | T0 y definición de ECE (D6) | P3 |
@@ -89,7 +89,7 @@ revisar T0):
 | Fecha | Hito |
 | --- | --- |
 | 2026-11-23 | T0 revisado e integrado |
-| 2026-11-24 | T1a, T3, T2a (si llega el generador) y T5 integrados |
+| 2026-11-24 | T1a, T3, T2a y T5 integrados |
 | 2026-11-26 | T1b, T2b, T4 y T7 integrados |
 | 2026-11-27 | T8: ejecución final del notebook |
 | 2026-11-27 a 2026-11-29 | T9: informe, revisión y entrega por TEC Digital |
@@ -117,8 +117,8 @@ cargo y no mueve ni edita celdas ajenas sin acordarlo.
 
 ## Contratos entre secciones (acordados en T0)
 
-Acordados por P1 el 2026-11-23; P2 y P3 los confirman al revisar T0. Cambiarlos
-exige registrar el nuevo acuerdo aquí y avisar a quien dependa de ellos.
+Acordados el 2026-11-23 y vigentes desde la integración de T0. Cambiarlos exige
+registrar el nuevo acuerdo aquí y avisar a quien dependa de ellos.
 
 ### Red (§1 → §3 y §4.1)
 
@@ -205,7 +205,7 @@ exige registrar el nuevo acuerdo aquí y avisar a quien dependa de ellos.
 
 ### Ensamble → ECE (§4.2 → §4.3 y §4.4)
 
-Propuesta de P2 (D6), **pendiente de revisión de P3**: el ECE recibe `X`, `y`,
+Propuesta de P2 (D6), aceptada por P3 el 2026-11-23: el ECE recibe `X`, `y`,
 `uncertainties` (varianza por observación, forma (n,)) y `predictions`
 (etiquetas predichas con los puntajes previos a la activación, forma (n,)).
 `run_ensemble_uq` y `quantify_uncertainty_ensemble` devuelven esa varianza por
@@ -241,14 +241,15 @@ repiten entre secciones.
 
 ### T0 — Acuerdos iniciales (los tres; P1 coordina)
 
-- [ ] Reemplazar P1/P2/P3 por los nombres del equipo.
+- [x] Registrar los nombres del equipo (tabla «Equipo»).
 - [x] Acordar Python y fijar `requirements.txt`: Python 3.15.0
   (`.python-version`) y versiones exactas del entorno de P1, con PyYAML 6.0.4.
   Comprobado: el entorno de P1 coincide con el archivo y las dependencias se
   resuelven con ruedas para Python 3.15 en Linux x64, Windows x64 y macOS
   arm64.
-- [ ] P2 (Linux y Windows) y P3 (Linux): instalar Python 3.15.0 y
-  `requirements.txt` en un entorno nuevo, y ejecutar `s0-config` y §4.3. En
+- [ ] Después de integrar T0, P2 (Linux y Windows) y P3 (Linux): instalar
+  Python 3.15.0 y `requirements.txt` en un entorno nuevo, y ejecutar
+  `s0-config` y §4.3. En
   Windows, comprobar si el Control de aplicaciones sigue bloqueando SciPy; si
   ocurre, ejecutar en Linux las secciones que usan SciPy o `sklearn`.
 - [x] Retirar nbstripout: renumeraba los identificadores de celda y
@@ -260,10 +261,10 @@ repiten entre secciones.
   esperado (contadores de ejecución, metadatos de PyCharm, nombre del kernel).
   Registrar lo que haya que hacer a mano.
 - [x] Resolver D2, D3 y D5, que afectan el contrato de la red.
-- [ ] Conseguir la función `generar_datos_R2` (D4). El material de apoyo ya
-  está en `docs/assignment/`.
-- [x] Acordar y registrar los contratos entre secciones (falta la revisión de
-  P3 del contrato ensamble → ECE).
+- [x] Resolver D4: los datos de R² se generan con scikit-learn, con
+  autorización del docente. El material de apoyo ya está en `docs/assignment/`.
+- [x] Acordar y registrar los contratos entre secciones. P3 aceptó el
+  contrato ensamble → ECE, incluido `predictions`.
 - [x] Crear la configuración común (celda `s0-config`).
 - [ ] Integrar T0 en `main` antes de abrir las ramas de la fase 1.
 
@@ -296,7 +297,8 @@ repiten entre secciones.
 
 ### T2a — P2: datos R² y código del experimento (fase 1)
 
-- [ ] Incorporar el generador provisto; documentar sus parámetros y la semilla de la sección.
+- [ ] Generar los datos con `sklearn.datasets` (D4); documentar las funciones,
+  sus parámetros y la semilla de la sección.
 - [ ] Generar y graficar un conjunto linealmente separable y otro no separable.
 - [ ] Preparar la partición 80 % entrenamiento / 20 % validación de `sklearn`.
 - [ ] Escribir, contra el contrato de la red, el código de las cuatro
@@ -345,7 +347,8 @@ repiten entre secciones.
 
 ### T5 — P3: ensamble y cuantificación de incertidumbre (fase 1)
 
-- [ ] Revisar el material de apoyo y cerrar con P2 el contrato ensamble → ECE.
+- [ ] Revisar el material de apoyo. El contrato ensamble → ECE ya está
+  acordado con P2 (D6).
 - [ ] Implementar `train_ensemble` con modelos de mínimos cuadrados de
   clasificación según el enunciado, documentando cómo se construyen sus miembros.
 - [ ] Implementar `run_ensemble_uq` para evaluar la varianza de las salidas.
@@ -367,7 +370,8 @@ repiten entre secciones.
   `uncertainty_accuracy_correlation`.
 - [x] Diseñar, ejecutar y explicar al menos dos pruebas unitarias de ECE con
   datos sintéticos de resultado conocido: 13 pruebas que cubren las cuatro funciones.
-- [ ] Revisión de P3 del contrato ensamble → ECE (sobre todo `predictions`).
+- [x] Revisión de P3 del contrato ensamble → ECE: aceptó `predictions` el
+  2026-11-23.
 - [x] Integrar en `main` y avisar a P3. Integrado el 2026-11-20 antes de la
   revisión de P3; si P3 cambia el contrato, se ajusta en una rama nueva.
 
@@ -420,9 +424,9 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | D1 | 1 | T8, T9 | **Acordado en T0 (2026-11-23).** El PDF pide un ZIP con fuentes LaTeX/LyX, PDF y Jupyter. Toda la solución sigue en el notebook único; cuando esté terminado (T8), se redacta un informe en LaTeX (T9) que no es una exportación del notebook. No se empieza antes. |
 | D2 | 1 | T0, T1a, T2a | **Acordado en T0.** La firma impresa `__init__(neurons_per_layer, alpha, max_weights)` omite `gamma`, que la lista de argumentos sí pide. Se usa `__init__(neurons_per_layer, alpha, max_weights, gamma=0.0, seed=None)`, que admite ambas lecturas. |
 | D3 | 2–4 | T0, T1a, T2a, T2b | **Acordado en T0.** Se exige softmax de salida y en R² K = 1; una softmax de un componente siempre vale 1, su derivada es 0 y la red no aprende. El docente indicó que una salida igual a 1 con K = 1 es aceptable. Se usa softmax([p, 0]), cuya primera componente es sigmoide(p): sigue siendo una softmax y permite comparar las configuraciones de §3. El notebook explica la elección y menciona la indicación del docente. |
-| D4 | 3 y 5 | T2a | **Parcial.** El material de apoyo de ensambles y ECE ya está en `docs/assignment/EstimacionIncertidumbre.pdf` (sección 2: ensamble entrenado sobre N particiones del entrenamiento e incertidumbre como varianza de las predicciones; sección 4: ECE). Falta `generar_datos_R2`; conseguirlo antes de sustituirlo por una implementación supuesta. |
+| D4 | 3 y 5 | T2a | **Acordado (2026-11-23).** El docente autorizó generar los datos de R² con scikit-learn en lugar de la función `generar_datos_R2`. T2a elige las funciones de `sklearn.datasets` para el conjunto linealmente separable y el no separable, documenta sus parámetros y usa `SEEDS["s3_r2"]`. El material de apoyo de ensambles y ECE está en `docs/assignment/EstimacionIncertidumbre.pdf` (sección 2: ensamble entrenado sobre N particiones del entrenamiento e incertidumbre como varianza de las predicciones; sección 4: ECE). |
 | D5 | 2–3 | T1a, T1b | **Acordado en T0, salvo XOR.** El docente se refiere a AdaGrad con «descenso del gradiente adaptativo». Se implementa AdaGrad con momentum γ (contrato de la red); γ = 0 es AdaGrad puro. Se usan los nombres `get_error` y `train_mlp`, aunque el PDF también dice `evaluar_error` y `entrenar_red`. Falta acordar en T1b cómo reportar el «error cero» de XOR frente al MSE. |
-| D6 | 5 | T5, T6 | **Acordado por P2 el 2026-11-20; pendiente de revisión de P3.** Definición del material (§4): ECE = Σ \|B_m\|/N · \|acc(B_m) − s̄(B_m)\|, ignorando cubetas vacías, con puntajes en [0, 1]. El material no fija la conversión de la varianza ni el número de cubetas, y la firma no recibe predicciones. Acuerdos: (1) puntaje s = 1 − varianza normalizada min-max, porque la varianza no está acotada y crece con la falta de confianza; (2) reportar además la correlación de Pearson entre incertidumbre y acierto, alternativa del material; (3) 10 cubetas de igual ancho, configurables; (4) agregar el parámetro `predictions`, con etiquetas obtenidas de la salida de la última capa antes de la activación. |
+| D6 | 5 | T5, T6 | **Acordado por P2 el 2026-11-20; aceptado por P3 el 2026-11-23.** Definición del material (§4): ECE = Σ \|B_m\|/N · \|acc(B_m) − s̄(B_m)\|, ignorando cubetas vacías, con puntajes en [0, 1]. El material no fija la conversión de la varianza ni el número de cubetas, y la firma no recibe predicciones. Acuerdos: (1) puntaje s = 1 − varianza normalizada min-max, porque la varianza no está acotada y crece con la falta de confianza; (2) reportar además la correlación de Pearson entre incertidumbre y acierto, alternativa del material; (3) 10 cubetas de igual ancho, configurables; (4) agregar el parámetro `predictions`, con etiquetas obtenidas de la salida de la última capa antes de la activación. |
 | D7 | 4–5 | T7 | §4 anuncia 60 puntos pero sus incisos suman 50. La última instrucción estadística termina en “verifique si existe” sin completar la hipótesis. Confirmar alcance; el plan conserva todos los incisos visibles. |
 | D8 | 4–5 | T3, T4, T5, T7 | **Acordado en T0.** «Normalización L2» no está definida y los atributos crudos de UNSW-NB15 van de 0/1 hasta unos 10⁹: sin escalar, la tangente hiperbólica se satura, y una L2 sobre datos crudos borraría casi todos los atributos. Se interpreta como L2 por fila sobre un preprocesamiento base común (one-hot, log1p y z-score); ver el contrato de datos y el protocolo de comparación. |
 
@@ -438,12 +442,13 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
   trabaja en macOS y en WSL (Ubuntu, dentro del sistema de archivos de WSL);
   P2 en Linux y a veces en Windows; P3 en Linux.
 - Mantener un único `README.md` general en la raíz, sin README por carpeta.
-- Los responsables son provisionales hasta asignar nombres; no se heredaron
-  automáticamente los integrantes mencionados en el TP1.
+- Los nombres están en la tabla «Equipo»; las etiquetas P1, P2 y P3 se usan
+  en las tareas y en los nombres de las ramas.
 - Los contratos entre secciones y la configuración común son los acordados en
   T0 (ver arriba). Este journal describe trabajo y acuerdos, no soluciones.
 - ECE de §4.3 según D6: confianza 1 − varianza normalizada, Pearson como
   complemento, 10 cubetas configurables y parámetro adicional `predictions`.
+- Los datos de R² de §3 se generan con scikit-learn (D4).
 - El informe LaTeX se redacta en T9, con el notebook terminado (D1).
 
 ## Registro de trabajo

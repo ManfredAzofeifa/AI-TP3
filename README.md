@@ -77,8 +77,8 @@ Los CSV de UNSW-NB15 van en `data/raw/unsw_nb15/` y los derivados en
 `data/processed/`; su contenido queda fuera de Git. Se usan los dos CSV
 particionados oficiales (unas 257 000 filas), según el contrato de datos de
 `JOURNAL.md`. En T3 (P3) se descargan y se documentan su fuente, conteos y
-carga dentro del notebook. El generador de datos de R² está pendiente de
-obtener, según D4 de `JOURNAL.md`.
+carga dentro del notebook. Los datos de R² se generan con scikit-learn, como
+autorizó el docente (D4 de `JOURNAL.md`).
 
 Las exportaciones finales del notebook irán en `results/figures/` y
 `results/tables/`, con nombres descriptivos. Los resultados transitorios pueden

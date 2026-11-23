@@ -1,8 +1,8 @@
 # Colaboración entre tres personas
 
 El plan, las dependencias y el trabajo en curso están en
-[JOURNAL.md](JOURNAL.md). P1, P2 y P3 son etiquetas provisionales:
-reemplazarlas por los nombres del equipo al iniciar.
+[JOURNAL.md](JOURNAL.md). Las etiquetas P1, P2 y P3 (tabla «Equipo» del
+journal) se usan en las tareas y en los nombres de las ramas.
 
 Las tres personas desarrollan **en paralelo, cada una en su rama**, sobre el
 notebook único. Para que eso funcione:
