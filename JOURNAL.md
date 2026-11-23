@@ -1,8 +1,8 @@
 # Journal y pendientes del TP3
 
 Estado al **23 de noviembre de 2026**: T0 (acuerdos, contratos, entorno fijado
-y configuración común) y T1a (clase `Multilayer_perceptron` de §1) integradas en
-`main`; fase 1 en curso. En `main` están además la investigación de §3.2 b y el
+y configuración común), T1a (clase `Multilayer_perceptron` de §1) y T1b (XOR de
+§2) integradas en `main`; fase 1 en curso. En `main` están además la investigación de §3.2 b y el
 ECE de §4.3; no hay datos descargados ni experimentos ejecutados.
 Fecha indicada por el enunciado: **domingo 29 de noviembre de 2026**, sin hora.
 
@@ -28,14 +28,14 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T1b | `p1/t1b-xor` | En desarrollo desde el 2026-11-23: XOR (§2). T1a ya está en `main`; T4 espera T3 |
+| P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T4 espera T3 (P3); el código puede escribirse antes contra el contrato de datos |
 | P2 | T2a (resto de §3) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego seguir T2a (D4 resuelto). La investigación de §3.2 b y el ECE de T6 ya están en `main` |
 | P3 | T3 y T5 (siguientes) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego T3 y T5 |
 
 - **Siguiente acción:** P2 y P3 instalan el entorno fijado (casilla de T0) y
   configuran PyCharm y nbdime según `CONTRIBUTING.md`. T1a ya está en `main`:
   P2 puede ejecutar T2b cuando integre T2a, y P1 hace T4 cuando P3 integre T3.
-  Siguen abiertas T1b (P1), T2a (P2), T3 y T5 (P3).
+  Siguen abiertas T2a (P2), T3 y T5 (P3); T1b ya está en `main`.
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
 
@@ -303,11 +303,16 @@ repiten entre secciones.
 
 ### T1b — P1: XOR (fase 1, requiere T1a)
 
-- [ ] Resolver XOR: cuatro entradas booleanas y etiquetas, arquitectura y
-  diagrama, calibración y curvas para los hiperparámetros probados.
-- [ ] Reportar predicciones de las cuatro entradas, criterio de error cero y
-  número de iteraciones de convergencia; distinguir clasificación y MSE (D5).
-- [ ] Integrar en `main`.
+- [x] Resolver XOR: cuatro entradas booleanas y etiquetas, arquitectura y
+  diagrama, calibración y curvas para los hiperparámetros probados
+  (`s2-calibracion`, `s2-curvas`, `s2-diagrama`): 36 configuraciones × 20
+  semillas × 2000 épocas.
+- [x] Reportar predicciones de las cuatro entradas, criterio de error cero y
+  número de iteraciones de convergencia; distinguir clasificación y MSE (D5)
+  (`s2-convergencia`).
+- [ ] Redactar en T8 el análisis con números (`s2-analisis`), con la
+  ejecución final.
+- [x] Integrar en `main`.
 
 ### T2a — P2: datos R² y código del experimento (fase 1)
 
@@ -442,7 +447,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | D2 | 1 | T0, T1a, T2a | **Acordado en T0.** La firma impresa `__init__(neurons_per_layer, alpha, max_weights)` omite `gamma`, que la lista de argumentos sí pide. Se usa `__init__(neurons_per_layer, alpha, max_weights, gamma=0.0, seed=None)`, que admite ambas lecturas. |
 | D3 | 2–4 | T0, T1a, T2a, T2b | **Acordado en T0.** Se exige softmax de salida y en R² K = 1; una softmax de un componente siempre vale 1, su derivada es 0 y la red no aprende. El docente indicó que una salida igual a 1 con K = 1 es aceptable. Se usa softmax([p, 0]), cuya primera componente es sigmoide(p): sigue siendo una softmax y permite comparar las configuraciones de §3. El notebook explica la elección y menciona la indicación del docente. |
 | D4 | 3 y 5 | T2a | **Acordado (2026-11-23).** El docente autorizó generar los datos de R² con scikit-learn en lugar de la función `generar_datos_R2`. T2a elige las funciones de `sklearn.datasets` para el conjunto linealmente separable y el no separable, documenta sus parámetros y usa `SEEDS["s3_r2"]`. El material de apoyo de ensambles y ECE está en `docs/assignment/EstimacionIncertidumbre.pdf` (sección 2: ensamble entrenado sobre N particiones del entrenamiento e incertidumbre como varianza de las predicciones; sección 4: ECE). |
-| D5 | 2–3 | T1a, T1b | **Acordado en T0, salvo XOR.** El docente se refiere a AdaGrad con «descenso del gradiente adaptativo». Se implementa AdaGrad con momentum γ (contrato de la red); γ = 0 es AdaGrad puro. Se usan los nombres `get_error` y `train_mlp`, aunque el PDF también dice `evaluar_error` y `entrenar_red`. En T1a (2026-11-23) se acordó ε = 10⁻⁸ y que los deltas sean el gradiente exacto del MSE de `get_error`. Falta acordar en T1b cómo reportar el «error cero» de XOR frente al MSE. |
+| D5 | 2–3 | T1a, T1b | **Acordado en T0, salvo XOR.** El docente se refiere a AdaGrad con «descenso del gradiente adaptativo». Se implementa AdaGrad con momentum γ (contrato de la red); γ = 0 es AdaGrad puro. Se usan los nombres `get_error` y `train_mlp`, aunque el PDF también dice `evaluar_error` y `entrenar_red`. En T1a (2026-11-23) se acordó ε = 10⁻⁸ y que los deltas sean el gradiente exacto del MSE de `get_error`. En T1b (2026-11-23) se acordó para XOR: K = 2 con softmax y etiquetas one-hot; «error cero» = ninguna de las cuatro entradas mal clasificada, con MSE ≤ 0.01 (el MSE exacto 0 es inalcanzable con softmax y recorte); época de convergencia = primera a partir de la cual eso se cumple hasta la última época; calibración en rejilla con 20 semillas por configuración. |
 | D6 | 5 | T5, T6 | **Acordado por P2 el 2026-11-20; aceptado por P3 el 2026-11-23.** Definición del material (§4): ECE = Σ \|B_m\|/N · \|acc(B_m) − s̄(B_m)\|, ignorando cubetas vacías, con puntajes en [0, 1]. El material no fija la conversión de la varianza ni el número de cubetas, y la firma no recibe predicciones. Acuerdos: (1) puntaje s = 1 − varianza normalizada min-max, porque la varianza no está acotada y crece con la falta de confianza; (2) reportar además la correlación de Pearson entre incertidumbre y acierto, alternativa del material; (3) 10 cubetas de igual ancho, configurables; (4) agregar el parámetro `predictions`, con etiquetas obtenidas de la salida de la última capa antes de la activación. |
 | D7 | 4–5 | T7 | §4 anuncia 60 puntos pero sus incisos suman 50. La última instrucción estadística termina en “verifique si existe” sin completar la hipótesis. Confirmar alcance; el plan conserva todos los incisos visibles. |
 | D8 | 4–5 | T3, T4, T5, T7 | **Acordado en T0.** «Normalización L2» no está definida y los atributos crudos de UNSW-NB15 van de 0/1 hasta unos 10⁹: sin escalar, la tangente hiperbólica se satura, y una L2 sobre datos crudos borraría casi todos los atributos. Se interpreta como L2 por fila sobre un preprocesamiento base común (one-hot, log1p y z-score); ver el contrato de datos y el protocolo de comparación. |
@@ -469,6 +474,8 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 - El informe LaTeX se redacta en T9, con el notebook terminado (D1).
 - Red de §1 (T1a): AdaGrad con ε = 10⁻⁸; deltas con el gradiente exacto del
   MSE de `get_error`; la captura de la prueba de entrenamiento se toma en T8.
+- XOR de §2 (T1b): K = 2 one-hot; error cero = 0 errores de clasificación y
+  MSE ≤ 0.01 sostenidos hasta el final; 36 configuraciones × 20 semillas.
 
 ## Registro de trabajo
 
@@ -484,6 +491,8 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-23 | P1 (T0, rama `p1/t0-acuerdos`) | Registrados los nombres del equipo, D4 (datos de R² con scikit-learn, autorizado por el docente) y la aceptación de P3 del parámetro `predictions` (D6). Comprobado en PyCharm (macOS, intérprete `.venv` 3.15.0, *IDE-Managed Server*): el notebook se ejecuta completo (13/13 pruebas de §4.3) y el ciclo ejecutar, *Clear All Outputs* y guardar deja `git diff` vacío después de guardar el notebook con el orden de claves de PyCharm. Agregadas a `CONTRIBUTING.md` las instrucciones para usar el `.venv` como kernel sin registrar kernels nuevos. No probado en Linux, Windows ni WSL. | P1 integra T0; luego P2 y P3 instalan el entorno fijado. |
 | 2026-11-23 | P1 (integración) | Integrada en `main` la rama `p1/t0-acuerdos` (sin conflictos; `main` no había cambiado desde la creación de la rama). Las verificaciones son las de las filas anteriores de T0. | P2 y P3 instalan el entorno fijado; fase 1: T1a, T2a, T3 y T5. |
 | 2026-11-23 | P1 (T1a, rama `p1/t1a-mlp`) | Implementada `Multilayer_perceptron` en §1 según el contrato, solo con NumPy: celdas `s1-descripcion`, `s1-derivacion` (propagación, delta con jacobiano de la softmax y MSE, caso K = 1, AdaGrad con momentum y cambios respecto de la retropropagación del curso), `s1-mlp-clase`, `s1-pruebas-descripcion`, `s1-pruebas` y `s1-captura-entrenamiento` (pendiente de T8). Acordados ε = 10⁻⁸, los deltas como gradiente exacto de `get_error` y la captura en T8. 20 pruebas, incluida la comprobación del gradiente con diferencias centrales para K = 3 y K = 1. Para confirmar que las pruebas detectan errores, se introdujeron a propósito ocho errores en el código (jacobiano, derivada de tanh, escala del error, momentum, acumulación de G, recorte, fila del sesgo y umbral): cada uno hizo fallar al menos una prueba. Notebook completo ejecutado desde un kernel limpio en macOS arm64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (salida fuera del repositorio): 20/20 pruebas de §1 y 13/13 de §4.3 correctas. El diff del notebook solo agrega celdas de §1, sin salidas. No probado en PyCharm, Linux, Windows ni WSL. | P1 integra T1a; P2 (T2b) y P1 (T4) ya pueden usar la red. |
+| 2026-11-23 | P1 (integración) | Integrada en `main` la rama `p1/t1a-mlp` (sin conflictos). Las verificaciones son las de la fila anterior. | P1 sigue con T1b. |
+| 2026-11-23 | P1 (T1b, rama `p1/t1b-xor`) | Resuelto XOR en §2 con la red de §1: celdas `s2-planteamiento`, `s2-funciones-descripcion`, `s2-funciones` (`s2_entrenar_xor`, `s2_epoca_convergencia`, `s2_dibujar_red`), `s2-pruebas` (8 pruebas), `s2-calibracion` (rejilla de M, `max_weights`, α y γ: 36 configuraciones × 20 semillas derivadas de `SEEDS["s2_xor"]` × 2000 épocas; 5 semillas y 500 épocas con `TP3_QUICK`), `s2-curvas` (mediana y rango intercuartílico del MSE de cada configuración), `s2-arquitectura` y `s2-diagrama`, `s2-convergencia` (corrida representativa, curvas de MSE y de errores de clasificación, predicciones) y `s2-analisis` (pendiente de T8). Acordados con P1 la salida K = 2, el criterio de error cero y la calibración con varias semillas (D5). Notebook completo ejecutado dos veces desde un kernel limpio en macOS arm64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 100 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2 y 13/13 de §4.3; las dos ejecuciones eligieron la misma configuración (M = 4, `max_weights` = 2, α = 0.5, γ = 0; 20/20 semillas convergen, época mediana 38) y clasificaron bien las cuatro entradas. Con `TP3_QUICK=1` también se ejecuta completo. El diff del notebook solo agrega celdas de §2, sin salidas. No probado en PyCharm, Linux, Windows ni WSL. | P1 integra T1b; T4 espera T3. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
