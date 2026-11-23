@@ -1,9 +1,9 @@
 # Journal y pendientes del TP3
 
 Estado al **23 de noviembre de 2026**: T0 (acuerdos, contratos, entorno fijado
-y configuración común) integrada en `main`; comienza la fase 1. En `main` están
-además la investigación de §3.2 b y el ECE de §4.3; no hay código de la red,
-datos descargados ni experimentos ejecutados.
+y configuración común) y T1a (clase `Multilayer_perceptron` de §1) integradas en
+`main`; fase 1 en curso. En `main` están además la investigación de §3.2 b y el
+ECE de §4.3; no hay datos descargados ni experimentos ejecutados.
 Fecha indicada por el enunciado: **domingo 29 de noviembre de 2026**, sin hora.
 
 Este archivo es la fuente del estado de trabajo. Leerlo antes de empezar una
@@ -28,13 +28,14 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T1a | `p1/t1a-mlp` | En desarrollo desde el 2026-11-23: clase `Multilayer_perceptron` y sus pruebas (§1) |
+| P1 | T1b (siguiente) | — | T1a integrada en `main` el 2026-11-23; reservar T1b al empezar. T4 espera T3 |
 | P2 | T2a (resto de §3) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego seguir T2a (D4 resuelto). La investigación de §3.2 b y el ECE de T6 ya están en `main` |
 | P3 | T3 y T5 (siguientes) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego T3 y T5 |
 
 - **Siguiente acción:** P2 y P3 instalan el entorno fijado (casilla de T0) y
-  configuran PyCharm y nbdime según `CONTRIBUTING.md`. Se abren las ramas de la
-  fase 1: T1a (P1), T2a (P2), T3 y T5 (P3).
+  configuran PyCharm y nbdime según `CONTRIBUTING.md`. T1a ya está en `main`:
+  P2 puede ejecutar T2b cuando integre T2a, y P1 hace T4 cuando P3 integre T3.
+  Siguen abiertas T1b (P1), T2a (P2), T3 y T5 (P3).
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
 
@@ -143,7 +144,11 @@ registrar el nuevo acuerdo aquí y avisar a quien dependa de ellos.
   matriz de pesos, con gradiente g: G ← G + g ⊙ g; paso = α · g / (√G + ε);
   v ← γ · v + paso; W ← W − v; luego el recorte por `max_weights`. Con γ = 0
   queda AdaGrad puro. G y v se conservan entre llamadas a `train_mlp`; una
-  instancia nueva los reinicia. T1a documenta el valor de ε.
+  instancia nueva los reinicia. ε = 10⁻⁸ (acordado en T1a).
+- **Deltas (T1a):** `backpropagate_deltas` calcula el gradiente exacto de
+  `get_error` (factor 2/(n·K), sin ½) con el jacobiano de la softmax; con K = 1
+  se reduce al delta de la sigmoide. La derivación está en `s1-derivacion`.
+  Deja en la instancia `delta_o`, `delta_s`, `grad_W_o` y `grad_W_s`.
 - **`train_mlp(num_epochs, X, T, alpha, gamma, X_val=None, T_val=None)`:**
   `alpha` y `gamma` reemplazan los valores guardados. Devuelve
   `{"train_error": [...], "val_error": [...]}`, con un valor por época medido
@@ -152,7 +157,10 @@ registrar el nuevo acuerdo aquí y avisar a quien dependa de ellos.
 - **`get_error(X, T)`:** MSE promediado sobre n · K, es decir, la media de
   (y − t)² sobre todas las observaciones y salidas.
 - **`predict(X)`:** etiquetas enteras de forma (n,): argmax si K ≥ 2 y umbral
-  0.5 si K = 1.
+  0.5 si K = 1 (y ≥ 0.5 → 1).
+- **Validación (T1a):** `T` debe tener exactamente la forma n × K; con K = 1 se
+  pasa `y.reshape(-1, 1)`, no un vector (n,). Una forma distinta, valores que no
+  son 0/1 o filas que no son one-hot (K ≥ 2) dan `ValueError`.
 
 ### Datos UNSW-NB15 (preparación → §4.1, §4.2 y §4.4)
 
@@ -272,22 +280,26 @@ repiten entre secciones.
 
 ### T1a — P1: clase `Multilayer_perceptron` y sus pruebas (fase 1)
 
-- [ ] Implementar `Multilayer_perceptron` y su constructor según el
+- [x] Implementar `Multilayer_perceptron` y su constructor según el
   contrato, con la representación matricial de pesos (D2).
-- [ ] Implementar `forward(X)` con tangente hiperbólica y softmax; con K = 1,
+- [x] Implementar `forward(X)` con tangente hiperbólica y softmax; con K = 1,
   softmax([p, 0]) (D3).
-- [ ] Implementar `backpropagate_deltas(X, T)` y `update_weights(X, T)`. El
+- [x] Implementar `backpropagate_deltas(X, T)` y `update_weights(X, T)`. El
   material deriva los deltas con sigmoide; con softmax y MSE, el delta de
-  salida usa el jacobiano de la softmax. Documentar la derivación.
-- [ ] Implementar `train_mlp` con AdaGrad y momentum según el contrato (D5),
+  salida usa el jacobiano de la softmax. Documentar la derivación
+  (`s1-derivacion`).
+- [x] Implementar `train_mlp` con AdaGrad y momentum según el contrato (D5),
   y explicar qué cambia respecto de la retropropagación vista en clase.
-- [ ] Implementar `get_error(X, T)` con MSE y registrar el error por época.
-- [ ] Documentar qué hace cada función y ejecutar al menos dos pruebas por
-  función para cubrir la regla general del PDF. Como mínimos particulares,
-  `forward` exige dos; constructor, entrenamiento, deltas, actualización y
-  error exigen al menos una. Conservar también la captura de la prueba de
-  entrenamiento, como adjunto de una celda Markdown.
-- [ ] Integrar en `main` y avisar a P2 y P3: desbloquea T2b y T4.
+- [x] Implementar `get_error(X, T)` con MSE y registrar el error por época.
+- [x] Documentar qué hace cada función y ejecutar al menos dos pruebas por
+  función para cubrir la regla general del PDF: 20 pruebas, de dos a cuatro
+  por función, incluida una comprobación del gradiente con diferencias
+  centrales para K = 3 y K = 1 (`s1-pruebas`).
+- [ ] Captura de la prueba de entrenamiento como adjunto de la celda Markdown
+  `s1-captura-entrenamiento`: se toma en T8, con el código entregado
+  (acordado en T1a).
+- [x] Integrar en `main` (2026-11-23): desbloquea T2b y T4.
+- [ ] Avisar a P2 y P3 de que T1a está en `main`.
 
 ### T1b — P1: XOR (fase 1, requiere T1a)
 
@@ -402,6 +414,9 @@ repiten entre secciones.
   `main` (es la única vez que se versionan), incluida la evidencia de la
   prueba de entrenamiento, y exportar a `results/` solo las figuras y tablas
   necesarias.
+- [ ] Antes de limpiar el kernel para ese commit, tomar en PyCharm el
+  pantallazo de la salida de `s1-pruebas` (líneas de `TestMLPTrain`) y
+  adjuntarlo a la celda Markdown `s1-captura-entrenamiento` (§1 d.1).
 - [ ] Revisar en conjunto que el análisis cite los números de esa ejecución.
 
 ### T9 — Informe LaTeX y entrega (los tres; P1 integra)
@@ -427,7 +442,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | D2 | 1 | T0, T1a, T2a | **Acordado en T0.** La firma impresa `__init__(neurons_per_layer, alpha, max_weights)` omite `gamma`, que la lista de argumentos sí pide. Se usa `__init__(neurons_per_layer, alpha, max_weights, gamma=0.0, seed=None)`, que admite ambas lecturas. |
 | D3 | 2–4 | T0, T1a, T2a, T2b | **Acordado en T0.** Se exige softmax de salida y en R² K = 1; una softmax de un componente siempre vale 1, su derivada es 0 y la red no aprende. El docente indicó que una salida igual a 1 con K = 1 es aceptable. Se usa softmax([p, 0]), cuya primera componente es sigmoide(p): sigue siendo una softmax y permite comparar las configuraciones de §3. El notebook explica la elección y menciona la indicación del docente. |
 | D4 | 3 y 5 | T2a | **Acordado (2026-11-23).** El docente autorizó generar los datos de R² con scikit-learn en lugar de la función `generar_datos_R2`. T2a elige las funciones de `sklearn.datasets` para el conjunto linealmente separable y el no separable, documenta sus parámetros y usa `SEEDS["s3_r2"]`. El material de apoyo de ensambles y ECE está en `docs/assignment/EstimacionIncertidumbre.pdf` (sección 2: ensamble entrenado sobre N particiones del entrenamiento e incertidumbre como varianza de las predicciones; sección 4: ECE). |
-| D5 | 2–3 | T1a, T1b | **Acordado en T0, salvo XOR.** El docente se refiere a AdaGrad con «descenso del gradiente adaptativo». Se implementa AdaGrad con momentum γ (contrato de la red); γ = 0 es AdaGrad puro. Se usan los nombres `get_error` y `train_mlp`, aunque el PDF también dice `evaluar_error` y `entrenar_red`. Falta acordar en T1b cómo reportar el «error cero» de XOR frente al MSE. |
+| D5 | 2–3 | T1a, T1b | **Acordado en T0, salvo XOR.** El docente se refiere a AdaGrad con «descenso del gradiente adaptativo». Se implementa AdaGrad con momentum γ (contrato de la red); γ = 0 es AdaGrad puro. Se usan los nombres `get_error` y `train_mlp`, aunque el PDF también dice `evaluar_error` y `entrenar_red`. En T1a (2026-11-23) se acordó ε = 10⁻⁸ y que los deltas sean el gradiente exacto del MSE de `get_error`. Falta acordar en T1b cómo reportar el «error cero» de XOR frente al MSE. |
 | D6 | 5 | T5, T6 | **Acordado por P2 el 2026-11-20; aceptado por P3 el 2026-11-23.** Definición del material (§4): ECE = Σ \|B_m\|/N · \|acc(B_m) − s̄(B_m)\|, ignorando cubetas vacías, con puntajes en [0, 1]. El material no fija la conversión de la varianza ni el número de cubetas, y la firma no recibe predicciones. Acuerdos: (1) puntaje s = 1 − varianza normalizada min-max, porque la varianza no está acotada y crece con la falta de confianza; (2) reportar además la correlación de Pearson entre incertidumbre y acierto, alternativa del material; (3) 10 cubetas de igual ancho, configurables; (4) agregar el parámetro `predictions`, con etiquetas obtenidas de la salida de la última capa antes de la activación. |
 | D7 | 4–5 | T7 | §4 anuncia 60 puntos pero sus incisos suman 50. La última instrucción estadística termina en “verifique si existe” sin completar la hipótesis. Confirmar alcance; el plan conserva todos los incisos visibles. |
 | D8 | 4–5 | T3, T4, T5, T7 | **Acordado en T0.** «Normalización L2» no está definida y los atributos crudos de UNSW-NB15 van de 0/1 hasta unos 10⁹: sin escalar, la tangente hiperbólica se satura, y una L2 sobre datos crudos borraría casi todos los atributos. Se interpreta como L2 por fila sobre un preprocesamiento base común (one-hot, log1p y z-score); ver el contrato de datos y el protocolo de comparación. |
@@ -452,6 +467,8 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
   complemento, 10 cubetas configurables y parámetro adicional `predictions`.
 - Los datos de R² de §3 se generan con scikit-learn (D4).
 - El informe LaTeX se redacta en T9, con el notebook terminado (D1).
+- Red de §1 (T1a): AdaGrad con ε = 10⁻⁸; deltas con el gradiente exacto del
+  MSE de `get_error`; la captura de la prueba de entrenamiento se toma en T8.
 
 ## Registro de trabajo
 
@@ -466,6 +483,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-23 | P1 (T0, rama `p1/t0-acuerdos`) | Acordados los contratos de la red, los datos UNSW-NB15, la comparación L2 y la configuración común; resueltos D1, D2, D3, D5 (salvo XOR) y D8. Fijados Python 3.15.0 y las versiones exactas de `requirements.txt` (PyYAML 6.0.4, porque 6.0.3 no tiene ruedas para 3.15 en Linux ni Windows); el entorno de P1 coincide y `pip install --dry-run --only-binary=:all:` resuelve las dependencias para Linux x64, Windows x64 y macOS arm64 (no es una instalación real en esas máquinas). Retirado nbstripout; versionadas las líneas de nbdime. Agregada la celda `s0-config` y guardado el notebook en el formato de nbformat (indentación de 1 espacio); el resto de las celdas no cambió. Notebook completo ejecutado desde un kernel limpio en macOS arm64 con `jupyter nbconvert --execute` (salida fuera del repositorio): `s0-config` imprime Python 3.15.0 y las versiones fijadas, y 13/13 pruebas de §4.3 correctas. `s0-config` también se comprobó desde la raíz con `TP3_QUICK=1`. Nota: sin activar el `.venv`, `python -m jupyter nbconvert` puede tomar otro `jupyter-nbconvert` del PATH. No se probó todavía en PyCharm, Linux, Windows ni WSL. | P2 y P3 revisan T0, instalan el entorno y comprueban PyCharm; P1 integra. |
 | 2026-11-23 | P1 (T0, rama `p1/t0-acuerdos`) | Registrados los nombres del equipo, D4 (datos de R² con scikit-learn, autorizado por el docente) y la aceptación de P3 del parámetro `predictions` (D6). Comprobado en PyCharm (macOS, intérprete `.venv` 3.15.0, *IDE-Managed Server*): el notebook se ejecuta completo (13/13 pruebas de §4.3) y el ciclo ejecutar, *Clear All Outputs* y guardar deja `git diff` vacío después de guardar el notebook con el orden de claves de PyCharm. Agregadas a `CONTRIBUTING.md` las instrucciones para usar el `.venv` como kernel sin registrar kernels nuevos. No probado en Linux, Windows ni WSL. | P1 integra T0; luego P2 y P3 instalan el entorno fijado. |
 | 2026-11-23 | P1 (integración) | Integrada en `main` la rama `p1/t0-acuerdos` (sin conflictos; `main` no había cambiado desde la creación de la rama). Las verificaciones son las de las filas anteriores de T0. | P2 y P3 instalan el entorno fijado; fase 1: T1a, T2a, T3 y T5. |
+| 2026-11-23 | P1 (T1a, rama `p1/t1a-mlp`) | Implementada `Multilayer_perceptron` en §1 según el contrato, solo con NumPy: celdas `s1-descripcion`, `s1-derivacion` (propagación, delta con jacobiano de la softmax y MSE, caso K = 1, AdaGrad con momentum y cambios respecto de la retropropagación del curso), `s1-mlp-clase`, `s1-pruebas-descripcion`, `s1-pruebas` y `s1-captura-entrenamiento` (pendiente de T8). Acordados ε = 10⁻⁸, los deltas como gradiente exacto de `get_error` y la captura en T8. 20 pruebas, incluida la comprobación del gradiente con diferencias centrales para K = 3 y K = 1. Para confirmar que las pruebas detectan errores, se introdujeron a propósito ocho errores en el código (jacobiano, derivada de tanh, escala del error, momentum, acumulación de G, recorte, fila del sesgo y umbral): cada uno hizo fallar al menos una prueba. Notebook completo ejecutado desde un kernel limpio en macOS arm64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (salida fuera del repositorio): 20/20 pruebas de §1 y 13/13 de §4.3 correctas. El diff del notebook solo agrega celdas de §1, sin salidas. No probado en PyCharm, Linux, Windows ni WSL. | P1 integra T1a; P2 (T2b) y P1 (T4) ya pueden usar la red. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
