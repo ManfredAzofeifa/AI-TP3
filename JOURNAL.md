@@ -28,7 +28,7 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T1b (siguiente) | — | T1a integrada en `main` el 2026-11-23; reservar T1b al empezar. T4 espera T3 |
+| P1 | T1b | `p1/t1b-xor` | En desarrollo desde el 2026-11-23: XOR (§2). T1a ya está en `main`; T4 espera T3 |
 | P2 | T2a (resto de §3) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego seguir T2a (D4 resuelto). La investigación de §3.2 b y el ECE de T6 ya están en `main` |
 | P3 | T3 y T5 (siguientes) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego T3 y T5 |
 
