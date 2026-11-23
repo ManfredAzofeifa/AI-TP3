@@ -28,7 +28,7 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T1a (siguiente) | — | T0 integrada en `main`; reservar T1a al empezar |
+| P1 | T1a | `p1/t1a-mlp` | En desarrollo desde el 2026-11-23: clase `Multilayer_perceptron` y sus pruebas (§1) |
 | P2 | T2a (resto de §3) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego seguir T2a (D4 resuelto). La investigación de §3.2 b y el ECE de T6 ya están en `main` |
 | P3 | T3 y T5 (siguientes) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego T3 y T5 |
 
