@@ -1,9 +1,9 @@
 # Journal y pendientes del TP3
 
-Estado al **23 de noviembre de 2026**: T0 (acuerdos, contratos, entorno y
-configuración común) en la rama `p1/t0-acuerdos`, pendiente de revisión de P2 y
-P3. En `main` están la investigación de §3.2 b y el ECE de §4.3; no hay código
-de la red, datos descargados ni experimentos ejecutados.
+Estado al **23 de noviembre de 2026**: T0 (acuerdos, contratos, entorno fijado
+y configuración común) integrada en `main`; comienza la fase 1. En `main` están
+además la investigación de §3.2 b y el ECE de §4.3; no hay código de la red,
+datos descargados ni experimentos ejecutados.
 Fecha indicada por el enunciado: **domingo 29 de noviembre de 2026**, sin hora.
 
 Este archivo es la fuente del estado de trabajo. Leerlo antes de empezar una
@@ -28,12 +28,13 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T0 | `p1/t0-acuerdos` | Lista para integrar |
-| P2 | T2a (resto de §3) | — | En espera de la integración de T0 para instalar el entorno fijado. La investigación de §3.2 b y el ECE de T6 ya están integrados en `main` |
-| P3 | — | — | En espera de la integración de T0 para instalar el entorno fijado; luego T3 y T5 |
+| P1 | T1a (siguiente) | — | T0 integrada en `main`; reservar T1a al empezar |
+| P2 | T2a (resto de §3) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego seguir T2a (D4 resuelto). La investigación de §3.2 b y el ECE de T6 ya están en `main` |
+| P3 | T3 y T5 (siguientes) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego T3 y T5 |
 
-- **Siguiente acción:** P1 integra T0 en `main`. Después, P2 y P3 instalan el entorno fijado y se abren las ramas de
-  la fase 1.
+- **Siguiente acción:** P2 y P3 instalan el entorno fijado (casilla de T0) y
+  configuran PyCharm y nbdime según `CONTRIBUTING.md`. Se abren las ramas de la
+  fase 1: T1a (P1), T2a (P2), T3 y T5 (P3).
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
 
@@ -266,7 +267,8 @@ repiten entre secciones.
 - [x] Acordar y registrar los contratos entre secciones. P3 aceptó el
   contrato ensamble → ECE, incluido `predictions`.
 - [x] Crear la configuración común (celda `s0-config`).
-- [ ] Integrar T0 en `main` antes de abrir las ramas de la fase 1.
+- [x] Integrar T0 en `main` antes de abrir las ramas de la fase 1
+  (2026-11-23).
 
 ### T1a — P1: clase `Multilayer_perceptron` y sus pruebas (fase 1)
 
@@ -463,6 +465,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-20 | P2 (integración) | Integradas en `main` las ramas `p2/t2a-r2` y `p2/t6-ece`. El único conflicto fue el de las dos filas agregadas al registro; se conservaron ambas. Notebook integrado ejecutado desde un kernel limpio con `jupyter nbconvert --execute` (copia fuera del repositorio): 13/13 pruebas de §4.3 correctas. | P3 revisa el contrato ensamble → ECE; T0 sigue pendiente. |
 | 2026-11-23 | P1 (T0, rama `p1/t0-acuerdos`) | Acordados los contratos de la red, los datos UNSW-NB15, la comparación L2 y la configuración común; resueltos D1, D2, D3, D5 (salvo XOR) y D8. Fijados Python 3.15.0 y las versiones exactas de `requirements.txt` (PyYAML 6.0.4, porque 6.0.3 no tiene ruedas para 3.15 en Linux ni Windows); el entorno de P1 coincide y `pip install --dry-run --only-binary=:all:` resuelve las dependencias para Linux x64, Windows x64 y macOS arm64 (no es una instalación real en esas máquinas). Retirado nbstripout; versionadas las líneas de nbdime. Agregada la celda `s0-config` y guardado el notebook en el formato de nbformat (indentación de 1 espacio); el resto de las celdas no cambió. Notebook completo ejecutado desde un kernel limpio en macOS arm64 con `jupyter nbconvert --execute` (salida fuera del repositorio): `s0-config` imprime Python 3.15.0 y las versiones fijadas, y 13/13 pruebas de §4.3 correctas. `s0-config` también se comprobó desde la raíz con `TP3_QUICK=1`. Nota: sin activar el `.venv`, `python -m jupyter nbconvert` puede tomar otro `jupyter-nbconvert` del PATH. No se probó todavía en PyCharm, Linux, Windows ni WSL. | P2 y P3 revisan T0, instalan el entorno y comprueban PyCharm; P1 integra. |
 | 2026-11-23 | P1 (T0, rama `p1/t0-acuerdos`) | Registrados los nombres del equipo, D4 (datos de R² con scikit-learn, autorizado por el docente) y la aceptación de P3 del parámetro `predictions` (D6). Comprobado en PyCharm (macOS, intérprete `.venv` 3.15.0, *IDE-Managed Server*): el notebook se ejecuta completo (13/13 pruebas de §4.3) y el ciclo ejecutar, *Clear All Outputs* y guardar deja `git diff` vacío después de guardar el notebook con el orden de claves de PyCharm. Agregadas a `CONTRIBUTING.md` las instrucciones para usar el `.venv` como kernel sin registrar kernels nuevos. No probado en Linux, Windows ni WSL. | P1 integra T0; luego P2 y P3 instalan el entorno fijado. |
+| 2026-11-23 | P1 (integración) | Integrada en `main` la rama `p1/t0-acuerdos` (sin conflictos; `main` no había cambiado desde la creación de la rama). Las verificaciones son las de las filas anteriores de T0. | P2 y P3 instalan el entorno fijado; fase 1: T1a, T2a, T3 y T5. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
