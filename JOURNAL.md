@@ -4,8 +4,8 @@ Estado al **23 de noviembre de 2026**: T0 (acuerdos, contratos, entorno fijado
 y configuración común), T1a (clase `Multilayer_perceptron` de §1) y T1b (XOR de
 §2) integradas en `main`; fase 1 en curso. En `main` están además la investigación de §3.2 b y el
 ECE de §4.3. T3 (preparación de datos UNSW-NB15, P3) está integrada en `main` (2026-11-25):
-los dos CSV de UNSW-NB15 están versionados en `data/raw/unsw_nb15/` y no hay experimentos
-ejecutados.
+los dos CSV de UNSW-NB15 están versionados en `data/raw/unsw_nb15/`. T2a y T2b (§3, P2) están
+integradas en `main` (2026-11-26).
 Fecha indicada por el enunciado: **domingo 29 de noviembre de 2026**, sin hora.
 
 Este archivo es la fuente del estado de trabajo. Leerlo antes de empezar una
@@ -31,15 +31,16 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
 | P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T3 integrada el 2026-11-25: T4 desbloqueada. Los CSV llegan con el pull (`data/raw/unsw_nb15/`); revisar D9 |
-| P2 | T2a y T2b (en curso, §3) | `p2/t2-r2` | Reservadas el 2026-11-26. Como T1a ya está en `main`, T2a y T2b se hacen en una sola rama. Entorno fijado en Linux x86_64 (Python 3.15.0 con `uv`; versiones iguales a `requirements.txt`, `pip check` limpio) y nbdime configurado; notebook completo ejecutado desde un kernel limpio con `jupyter nbconvert --execute`, sin `TP3_QUICK`: 20/20, 8/8, 21/21 y 13/13 pruebas correctas. Pendientes: PyCharm y Windows (SciPy) |
+| P2 | Revisiones (T5 y T7) | — | T2a y T2b integradas en `main` el 2026-11-26 (§3 completa; los números del análisis se revisan en T8). Entorno fijado y nbdime en Linux x86_64. Pendientes: PyCharm y Windows (SciPy); revisar D10 con P1 y P3 |
 | P3 | T5 (siguiente) | — | T3 integrada en `main` el 2026-11-25 (desbloquea T4). Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck). Sigue T5 |
 
-- **Siguiente acción:** P2 ya instaló el entorno fijado y nbdime en Linux; le faltan PyCharm y
-  la comprobación en Windows (casilla de T0). P2 hace T2a y T2b juntas en `p2/t2-r2`. T3 ya está en `main`, así que P1 puede hacer T4: los dos CSV
+- **Siguiente acción:** §3 (T2a y T2b) ya está en `main`; P1 y P3 pueden revisar D10. P2 ya
+  instaló el entorno fijado y nbdime en Linux; le faltan PyCharm y la comprobación en Windows
+  (casilla de T0). T3 ya está en `main`, así que P1 puede hacer T4: los dos CSV
   llegan con el pull, en `data/raw/unsw_nb15/`; revisar D9 (duplicados). **Ojo:** `main` se
   reescribió el 2026-11-25 (ver registro); quien haya hecho pull antes debe ejecutar
-  `git fetch origin` y `git reset --hard origin/main` (sin cambios locales pendientes). Siguen abiertas T2a y T2b
-  (P2) y T5 (P3); T1b ya está en `main`.
+  `git fetch origin` y `git reset --hard origin/main` (sin cambios locales pendientes). Siguen abiertas T4 (P1) y
+  T5 (P3); T1b, T2a y T2b ya están en `main`.
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
 
@@ -358,15 +359,21 @@ repiten entre secciones.
   los artículos científicos que se citarán. Redactado en la celda
   `s3-investigacion-neuronas` con seis referencias cuyos datos se verificaron
   en línea; las preguntas que dependen de resultados quedan para T2b.
-- [ ] Integrar en `main` lo que no depende de resultados.
+- [x] Integrar en `main` (2026-11-26, junto con T2b).
 
 ### T2b — P2: ejecución y análisis R² (fase 2, requiere T1a)
 
-- [ ] Ejecutar las ocho combinaciones con particiones comparables.
-- [ ] Mostrar curvas de entrenamiento y validación, la tabla de gráficas y
-  la tabla de errores finales por configuración y escenario.
-- [ ] Analizar α, tamaño de capa oculta y error, citando los artículos dentro del notebook.
-- [ ] Ejecutar desde cero e integrar en `main`.
+- [x] Ejecutar las ocho combinaciones con particiones comparables: misma partición
+  por escenario y las mismas 20 semillas de pesos iniciales (D10) (`s3-experimento`).
+- [x] Mostrar curvas de entrenamiento y validación, la tabla de gráficas y
+  la tabla de errores finales por configuración y escenario (`s3-curvas`,
+  `s3-errores-finales`).
+- [x] Analizar α, tamaño de capa oculta y error, citando los artículos dentro del notebook
+  (`s3-analisis`). Se agregó un experimento complementario de α con M ∈ {2, 20}
+  (`s3-alpha`) y dos referencias verificadas: LeCun et al. 1998 (§4.7, en el PDF y en
+  Crossref) y Duchi et al. 2011 (JMLR).
+- [x] Ejecutar desde cero e integrar en `main` (2026-11-26).
+- [ ] Revisar en T8 que los números citados en `s3-analisis` coincidan con la ejecución final.
 
 ### T3 — P3: preparación de datos UNSW-NB15 (fase 1)
 
@@ -519,6 +526,9 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
   4500–4509 (70/30), se conservan los duplicados (D9) y `s4_unsw` se comparte entre secciones.
 - XOR de §2 (T1b): K = 2 one-hot; error cero = 0 errores de clasificación y
   MSE ≤ 0.01 sostenidos hasta el final; 36 configuraciones × 20 semillas.
+- R² de §3 (T2a y T2b): `make_blobs` y `make_moons` con 300 muestras y separabilidad comprobada
+  con un programa lineal; partición 80/20 estratificada; γ ≠ 0 = 0.9; `max_weights` elegido con el
+  error de entrenamiento; 20 semillas emparejadas (D10).
 
 ## Registro de trabajo
 
@@ -539,6 +549,8 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-25 | P3 (entorno y T3, rama `p3/t3-datos`) | **Entorno:** Python 3.15.0 instalado con `uv` en Linux (Steam Deck) y `requirements.txt` instalado en un `.venv` nuevo; las versiones coinciden con el archivo y `pip check` sale limpio (solo faltan `appnope` y `pywinpty`, que son de macOS y Windows). `nbdime config-git --enable` hecho y probado con `git diff` del notebook. PyCharm con el intérprete del `.venv` e *IDE-Managed Server*: `s0-config` imprime Python 3.15.0 y las versiones fijadas, y el diff solo mostró la salida de `s0-config` y sus tiempos, con el orden de claves intacto. **T3:** descargados los dos CSV oficiales (conteos y SHA-256 en el contrato de datos) y revisadas columnas, clases, faltantes, negativos, categorías y duplicados (D9). Implementadas en §4 las celdas `s4-datos-fuente`, `s4-datos-funciones-descripcion`, `s4-datos-funciones` (`load_unsw_nb15`, `split_unsw`, `preprocess_unsw` y siete auxiliares), `s4-datos-pruebas-descripcion`, `s4-datos-pruebas` (21 pruebas con datos sintéticos), `s4-datos-carga-descripcion` y `s4-datos-carga` (verificación de archivos, resumen, duplicados, superposición en las 40 particiones y preprocesamiento con y sin L2). Referencia de Moustafa y Slay (2015) comprobada en Crossref. Para confirmar que las pruebas detectan errores, se introdujeron a propósito siete errores (partición sin estratificar, z-score ajustado con prueba, σ = 0 sin reemplazar, log1p con negativos, categorías tomadas de prueba, L2 solo en las numéricas y duplicados comparados con `id`): cada uno hizo fallar al menos una prueba. Leer sin `utf-8-sig` no es un error, porque pandas ya descarta el BOM. Notebook completo ejecutado desde un kernel limpio en Linux x86_64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 3 min 15 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2, 21/21 de §4 (datos) y 13/13 de §4.3. `s4-datos-carga` se ejecutó sin errores: superposición media de 45.2 % (80/20) y 44.5 % (70/30); X de 195 columnas, sin `NaN`, en 0.7 s sin L2 y 1.3 s con L2. El diff del notebook solo agrega celdas de §4 (preparación de datos), sin salidas. | P3 integra T3; P1 hace T4. P3 sigue con T5. |
 | 2026-11-25 | P3 (integración) | Integrada en `main` la rama `p3/t3-datos`, sin conflictos: `main` no había cambiado desde la reserva (`4f36e5f`). Las verificaciones son las de la fila anterior; las celdas integradas son idénticas a las ejecutadas. | P1 hace T4; P3 sigue con T5. |
 | 2026-11-25 | P3 (datos en Git e historia de `main`) | **Historia reescrita:** los cuatro commits de T3 en `main` (`4f36e5f`, `d48a9b2`, `11b81e0` y `868f572`) se recrearon sin la línea `Co-Authored-By` que había agregado el asistente (`6210172`, `04308e9`, `9179837` y `d2c4c69`): los árboles de archivos, los autores y las fechas son idénticos, y `git diff 868f572 d2c4c69` sale vacío. Se publicó con force push en `main`, por decisión de P3, como excepción a `CONTRIBUTING.md`. Quien haya hecho pull antes: `git fetch origin` y `git reset --hard origin/main`. **Datos en Git:** se retiraron del `.gitignore` las exclusiones de `data/`, `results/raw/` y artefactos, y en `.gitattributes` se marcó `data/**` como binario. Comprobado: `git hash-object` con y sin filtros coincide para los dos CSV (bytes intactos, CRLF incluido). Actualizados `AGENTS.md`, `CONTRIBUTING.md`, `README.md`, este journal y `s4-datos-fuente`. El repositorio es público: subir los CSV redistribuye UNSW-NB15 (sus autores lo ofrecen para investigación académica, citando la fuente). | P3 sube los CSV y estos cambios; P1 y P2 hacen pull. |
+| 2026-11-26 | P2 (entorno, T2a y T2b, rama `p2/t2-r2`) | **Entorno:** Python 3.15.0 instalado con `uv` (actualizado a 0.13.10: la 0.12.21 solo ofrecía 3.15.0rc2) en Linux x86_64 y `requirements.txt` en un `.venv` nuevo; las versiones coinciden con el archivo (solo faltan `appnope` y `pywinpty`) y `pip check` sale limpio. `nbdime config-git --enable` hecho; `git diff` del notebook requiere el `.venv` activado. PyCharm y Windows siguen sin comprobar. **T2a:** en §3, celdas `s3-planteamiento`, `s3-funciones-descripcion`, `s3-funciones` (siete funciones `s3_*`), `s3-pruebas` (15 pruebas), `s3-datos-descripcion`, `s3-datos`, `s3-experimento-descripcion`, `s3-max-weights`, `s3-experimento`, `s3-curvas-descripcion`, `s3-curvas`, `s3-errores-descripcion` y `s3-errores-finales`; decisiones en D10. **T2b:** `s3-alpha-descripcion`, `s3-alpha` (experimento complementario de α) y `s3-analisis` (comparación, ajuste de α según M y relación entre M y error, con LeCun et al. 1998 y Duchi et al. 2011); en `s3-investigacion-neuronas` se reemplazó la nota de pendiente. Para confirmar que las pruebas detectan errores, se introdujeron a propósito ocho errores (partición sin estratificar, programa lineal sin margen, desviación con ddof = 0, γ ignorado, error de la primera época, media en vez de mediana, semilla fija y T como vector): cada uno hizo fallar al menos una prueba. Notebook completo ejecutado cuatro veces (dos con T2a y dos con T2b, la última con las celdas integradas) desde un kernel limpio en Linux x86_64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 2 min 10 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos) y 13/13 de §4.3; los resultados de §3 fueron idénticos en todas las ejecuciones (`max_weights` elegido = 1). El diff del notebook solo agrega celdas de §3 y modifica `s3-investigacion-neuronas`, sin salidas. | P2 integra T2a y T2b. |
+| 2026-11-26 | P2 (integración) | Integrada en `main` la rama `p2/t2-r2`, sin conflictos: `main` no había cambiado desde la reserva (`9254913`). Las verificaciones son las de la fila anterior; las celdas integradas son idénticas a las ejecutadas. | P1 y P3 revisan D10; T8 revisa los números de `s3-analisis`. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
