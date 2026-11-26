@@ -31,11 +31,11 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
 | P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T3 integrada el 2026-11-25: T4 desbloqueada. Los CSV llegan con el pull (`data/raw/unsw_nb15/`); revisar D9 |
-| P2 | Revisiones (T5 y T7) | — | D10 aceptada por P1 y P3 y su revisión integrada en `main` el 2026-11-26. T2a y T2b integradas en `main` el 2026-11-26 (§3 completa; los números del análisis se revisan en T8). Entorno fijado, nbdime y PyCharm (ciclo *Clear All Outputs* incluido) comprobados en Linux x86_64. Pendiente: Windows (SciPy) |
+| P2 | Revisiones (T5 y T7) | — | D10 aceptada por P1 y P3 y su revisión integrada en `main` el 2026-11-26. T2a y T2b integradas en `main` el 2026-11-26 (§3 completa; los números del análisis se revisan en T8). Entorno fijado, nbdime y PyCharm (ciclo *Clear All Outputs* incluido) comprobados en Linux x86_64. Entorno fijado y nbdime comprobados en Windows 11 el 2026-11-26: SciPy ya no está bloqueado y el notebook completo se ejecuta sin errores |
 | P3 | T5 (siguiente) | — | T3 integrada en `main` el 2026-11-25 (desbloquea T4). Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck). Sigue T5 |
 
 - **Siguiente acción:** §3 (T2a y T2b) y la revisión de D10 ya están en `main`; D10 está aceptada. P2 ya
-  instaló el entorno fijado, nbdime y PyCharm en Linux; le falta la comprobación en Windows
+  comprobó el entorno fijado en Linux (con PyCharm) y en Windows, donde SciPy ya carga
   (casilla de T0). T3 ya está en `main`, así que P1 puede hacer T4: los dos CSV
   llegan con el pull, en `data/raw/unsw_nb15/`; revisar D9 (duplicados). **Ojo:** `main` se
   reescribió el 2026-11-25 (ver registro); quien haya hecho pull antes debe ejecutar
@@ -282,17 +282,19 @@ repiten entre secciones.
   Comprobado: el entorno de P1 coincide con el archivo y las dependencias se
   resuelven con ruedas para Python 3.15 en Linux x64, Windows x64 y macOS
   arm64.
-- [ ] Después de integrar T0, P2 (Linux y Windows) y P3 (Linux): instalar
+- [x] Después de integrar T0, P2 (Linux y Windows) y P3 (Linux): instalar
   Python 3.15.0 y `requirements.txt` en un entorno nuevo, y ejecutar
   `s0-config` y §4.3. En
   Windows, comprobar si el Control de aplicaciones sigue bloqueando SciPy; si
   ocurre, ejecutar en Linux las secciones que usan SciPy o `sklearn`.
   Hecho en Linux por P3 (2026-11-25) y por P2 (2026-11-26, también en
-  PyCharm); falta Windows (P2).
+  PyCharm), y en Windows 11 por P2 (2026-11-26): SciPy y scikit-learn cargan
+  y el notebook completo se ejecuta sin errores; en Windows no se probó PyCharm.
 - [x] Retirar nbstripout: renumeraba los identificadores de celda y
   reformateaba todo el archivo. Las salidas se limpian con *Clear All Outputs*
   de PyCharm. Se versionan en `.gitattributes` las líneas de nbdime.
-- [ ] Configurar nbdime en cada clon (`nbdime config-git --enable`).
+- [ ] Configurar nbdime en cada clon (`nbdime config-git --enable`). Hecho
+  por P3 (Linux) y por P2 (Linux y Windows); falta registrar el de P1.
 - [x] Comprobar el ciclo en PyCharm (macOS): ejecutar, *Clear All Outputs* y
   guardar quita salidas, contadores y `ExecuteTime`, y no cambia `kernelspec`.
   Lo único distinto era el orden de claves de las celdas de código; se guardó
@@ -568,6 +570,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-26 | P2 (PyCharm en Linux) | PyCharm configurado en Linux x86_64: intérprete del proyecto `.venv` (Python 3.15.0, versiones de `requirements.txt`) y notebook en *IDE-Managed Server*. Ejecutadas en ese kernel, sin `TP3_QUICK`, las celdas `s0-config`, `s1-mlp-clase`, `s1-pruebas`, todas las celdas de código de §3 y `s4-3-funciones` y `s4-3-pruebas`: `s0-config` imprime Python 3.15.0 y las versiones fijadas; 20/20 pruebas de §1, 15/15 de §3 y 13/13 de §4.3 correctas; las celdas del experimento de §3 terminan sin errores (`max_weights` elegido = 1, como en T2b). No se ejecutaron §2 ni la preparación de datos de §4, que §3 y §4.3 no necesitan. PyCharm guardó solo las salidas en disco: frente a `HEAD` cambiaron únicamente `outputs`, `execution_count` y los metadatos de esas 13 celdas; `source`, los identificadores, el orden de las celdas y los metadatos del notebook (`kernelspec`) no cambiaron. Después, *Clear All Outputs* y guardar dejaron vacío el `git diff` del notebook. | P2 comprueba Windows (SciPy). |
 | 2026-11-26 | P2 (revisión de D10, rama `p2/t2-d10`) | Revisada D10 frente al enunciado y al código de §3 en `main`. Los puntos (1), (2), (3) y (5) se sostienen. El punto (4) se mantiene, pero la elección es sensible al criterio: la media de las medianas elige `max_weights` = 1 por poco (0.102 frente a 0.115 y 0.116), la media de los log₁₀ elegiría 2 y el rango medio, 1 (2 frente a 2.125). En §3: `s3-max-weights` conserva los resultados de cada valor; la celda nueva `s3-max-weights-sensibilidad` muestra los tres criterios y las comparaciones de 3.2 b con cada valor, sin entrenar redes nuevas; `s3-experimento-descripcion` agrega que `max_weights` también fija la escala de la inicialización y que la variabilidad entre semillas refleja solo los pesos iniciales; `s3-analisis` agrega la sensibilidad y el piso del MSE que impone el recorte con M = 2. Con los cuatro valores, M = 20 termina con menos error que M = 2 y γ = 0.9 con menos que γ = 0 en los cuatro pares; el orden entre b) y c) se invierte con `max_weights` ≥ 2. Notebook completo ejecutado dos veces desde un kernel limpio en Linux x86_64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 3 min; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos) y 13/13 de §4.3, sin errores; los resultados de §3 son los mismos que en `main` (`max_weights` elegido = 1). No se agregaron funciones ni pruebas. El diff del notebook solo toca celdas de §3, sin salidas. | P1 y P3 aceptan o comentan D10; P2 integra `p2/t2-d10`. |
 | 2026-11-26 | P2 (integración) | Integrada en `main` la rama `p2/t2-d10`, sin conflictos: `main` no había cambiado desde la creación de la rama (`8667828`). P1 y P3 aceptaron D10. Las verificaciones son las de la fila anterior; las celdas integradas son idénticas a las ejecutadas. | T8 revisa los números de `s3-analisis`, incluida la sensibilidad a `max_weights`. |
+| 2026-11-26 | P2 (entorno en Windows) | Python 3.15.0 de 64 bits instalado en Windows 11 (AMD64) con el administrador de instalaciones de Python (`py install 3.15.0-64`); se borró el `.venv` anterior (Python 3.14.7) y se creó uno nuevo con `requirements.txt`. `pip check` sale limpio y `nbdime config-git --enable` está hecho. **SciPy ya no está bloqueado:** SciPy 1.18.1 y scikit-learn 1.9.1 se importan, incluido `scipy.stats.wilcoxon`; el bloqueo de la DLL `_fblas` registrado el 2026-11-20 (con Python 3.14.7) no se repite; no se averiguó qué lo eliminó. Notebook completo ejecutado desde un kernel limpio con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 2 min 16 s; salida fuera del repositorio), sin errores en ninguna celda: `s0-config` imprime Python 3.15.0 y las versiones fijadas; 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos) y 13/13 de §4.3. Resultados iguales a los de Linux y macOS: §2 elige M = 4, `max_weights` = 2, α = 0.5, γ = 0 (20/20 semillas, época 38); §3 elige `max_weights` = 1 con la misma sensibilidad al criterio; §4 cuenta 103 575 filas duplicadas (40.2 %). No se probó PyCharm en Windows. | Ninguno para T0 por parte de P2; P2 revisa T5 y T7 cuando lleguen. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
