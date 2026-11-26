@@ -342,14 +342,18 @@ repiten entre secciones.
 
 ### T2a — P2: datos R² y código del experimento (fase 1)
 
-- [ ] Generar los datos con `sklearn.datasets` (D4); documentar las funciones,
-  sus parámetros y la semilla de la sección.
-- [ ] Generar y graficar un conjunto linealmente separable y otro no separable.
-- [ ] Preparar la partición 80 % entrenamiento / 20 % validación de `sklearn`.
-- [ ] Escribir, contra el contrato de la red, el código de las cuatro
+- [x] Generar los datos con `sklearn.datasets` (D4); documentar las funciones,
+  sus parámetros y la semilla de la sección: `make_blobs` (separable) y
+  `make_moons` (no separable), 300 muestras, `SEEDS["s3_r2"]` (`s3-planteamiento`).
+- [x] Generar y graficar un conjunto linealmente separable y otro no separable;
+  la separabilidad se comprueba con un programa lineal (`s3-datos`).
+- [x] Preparar la partición 80 % entrenamiento / 20 % validación de `sklearn`
+  (estratificada, `random_state=SEEDS["s3_r2"]`).
+- [x] Escribir, contra el contrato de la red, el código de las cuatro
   configuraciones (D = 2, K según D3, α = 0.01, M ∈ {20, 2}, γ ∈ {0, un valor
   no nulo documentado}) en ambos escenarios con P = 50 iteraciones, y el de
-  las curvas, la tabla de gráficas y la tabla de errores finales.
+  las curvas, la tabla de gráficas y la tabla de errores finales (D10; siete
+  funciones `s3_*` con 15 pruebas en `s3-pruebas`).
 - [x] Investigar la relación entre neuronas ocultas y de entrada, y reunir
   los artículos científicos que se citarán. Redactado en la celda
   `s3-investigacion-neuronas` con seis referencias cuyos datos se verificaron
@@ -482,6 +486,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | D7 | 4–5 | T7 | §4 anuncia 60 puntos pero sus incisos suman 50. La última instrucción estadística termina en “verifique si existe” sin completar la hipótesis. Confirmar alcance; el plan conserva todos los incisos visibles. |
 | D8 | 4–5 | T3, T4, T5, T7 | **Acordado en T0.** «Normalización L2» no está definida y los atributos crudos de UNSW-NB15 van de 0/1 hasta unos 10⁹: sin escalar, la tangente hiperbólica se satura, y una L2 sobre datos crudos borraría casi todos los atributos. Se interpreta como L2 por fila sobre un preprocesamiento base común (one-hot, log1p y z-score); ver el contrato de datos y el protocolo de comparación. |
 | D9 | 4–5 | T3, T4, T5, T7 | **Acordado por P3 en T3 (2026-11-25); P1 y P2 pueden revisarlo.** En los dos CSV unidos, 103 575 filas (40.2 %) repiten exactamente los atributos y la etiqueta de otra (96 297 son ataques, sobre todo *Generic*), y 414 grupos de atributos idénticos tienen etiquetas distintas. Con las particiones de T3, el 45.2 % de las filas de prueba (media de las 30 particiones 80/20; 44.5 % en las 10 de 70/30) tienen una copia exacta de sus atributos en entrenamiento, así que la tasa de aciertos, el F1 y el ECE resultan optimistas. Se **conservan todas las filas**, como fija el contrato y como pide el enunciado («datos provistos»). La superposición se mide y documenta en el notebook (`s4-datos-carga`), y T4 y T7 la mencionan como limitación al analizar. `load_unsw_nb15(..., drop_duplicates=True)` permite repetir el análisis sin duplicados (154 098 filas, 44.4 % ataques). |
+| D10 | 3–4 | T2a, T2b | **Propuesto por P2 en T2a (2026-11-26); P1 y P3 pueden revisarlo.** Para §3.2: (1) γ ≠ 0 «a conveniencia» = 0.9, el mismo valor probado en §2; (2) P = 50 iteraciones = 50 épocas en lote completo sobre el 80 % de entrenamiento («todo el conjunto de muestras» se lee como lote completo), con el MSE de validación (20 %) registrado en cada época; (3) «error final de convergencia» = MSE de la época 50, aunque la red no haya convergido; (4) `max_weights`, que el enunciado no fija, se elige entre {0.5, 1, 2, 5} con el MSE final de **entrenamiento** (menor media de las medianas de las 8 combinaciones), sin usar validación; (5) cada combinación se repite con 20 semillas de pesos iniciales derivadas de `SEEDS["s3_r2"]`, las mismas en las 8 combinaciones y con la misma partición, y se reportan mediana, rango intercuartílico, media y desviación estándar. |
 
 ## Acuerdos vigentes
 
