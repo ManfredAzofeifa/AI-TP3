@@ -30,7 +30,7 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 | --- | --- | --- | --- |
 | P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T4 espera T3 (P3); el código puede escribirse antes contra el contrato de datos |
 | P2 | T2a (resto de §3) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego seguir T2a (D4 resuelto). La investigación de §3.2 b y el ECE de T6 ya están en `main` |
-| P3 | T3 y T5 (siguientes) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego T3 y T5 |
+| P3 | T3 (en curso); luego T5 | `p3/t3-datos` | Reservada el 2026-11-25. Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck): `s0-config` imprime Python 3.15.0 y las versiones fijadas. Acordado para T3: particiones estratificadas por `label`, semillas 4000–4029 (80/20) y 4500–4509 (70/30), one-hot y z-score propios con pandas/NumPy |
 
 - **Siguiente acción:** P2 y P3 instalan el entorno fijado (casilla de T0) y
   configuran PyCharm y nbdime según `CONTRIBUTING.md`. T1a ya está en `main`:
