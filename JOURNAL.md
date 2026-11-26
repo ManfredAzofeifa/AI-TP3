@@ -31,15 +31,14 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
 | P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T3 integrada el 2026-11-25: T4 desbloqueada. Los CSV llegan con el pull (`data/raw/unsw_nb15/`); revisar D9 |
-| P2 | T2a (resto de §3) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego seguir T2a (D4 resuelto). La investigación de §3.2 b y el ECE de T6 ya están en `main` |
+| P2 | T2a y T2b (en curso, §3) | `p2/t2-r2` | Reservadas el 2026-11-26. Como T1a ya está en `main`, T2a y T2b se hacen en una sola rama. Entorno fijado en Linux x86_64 (Python 3.15.0 con `uv`; versiones iguales a `requirements.txt`, `pip check` limpio) y nbdime configurado; notebook completo ejecutado desde un kernel limpio con `jupyter nbconvert --execute`, sin `TP3_QUICK`: 20/20, 8/8, 21/21 y 13/13 pruebas correctas. Pendientes: PyCharm y Windows (SciPy) |
 | P3 | T5 (siguiente) | — | T3 integrada en `main` el 2026-11-25 (desbloquea T4). Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck). Sigue T5 |
 
-- **Siguiente acción:** P2 instala el entorno fijado (casilla de T0) y
-  configura PyCharm y nbdime según `CONTRIBUTING.md`; P3 ya lo hizo. T1a ya está en `main`:
-  P2 puede ejecutar T2b cuando integre T2a. T3 ya está en `main`, así que P1 puede hacer T4: los dos CSV
+- **Siguiente acción:** P2 ya instaló el entorno fijado y nbdime en Linux; le faltan PyCharm y
+  la comprobación en Windows (casilla de T0). P2 hace T2a y T2b juntas en `p2/t2-r2`. T3 ya está en `main`, así que P1 puede hacer T4: los dos CSV
   llegan con el pull, en `data/raw/unsw_nb15/`; revisar D9 (duplicados). **Ojo:** `main` se
   reescribió el 2026-11-25 (ver registro); quien haya hecho pull antes debe ejecutar
-  `git fetch origin` y `git reset --hard origin/main` (sin cambios locales pendientes). Siguen abiertas T2a
+  `git fetch origin` y `git reset --hard origin/main` (sin cambios locales pendientes). Siguen abiertas T2a y T2b
   (P2) y T5 (P3); T1b ya está en `main`.
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
