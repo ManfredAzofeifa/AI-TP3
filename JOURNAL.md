@@ -5,7 +5,8 @@ y configuración común), T1a (clase `Multilayer_perceptron` de §1) y T1b (XOR 
 §2) integradas en `main`; fase 1 en curso. En `main` están además la investigación de §3.2 b y el
 ECE de §4.3. T3 (preparación de datos UNSW-NB15, P3) está integrada en `main` (2026-11-25):
 los dos CSV de UNSW-NB15 están versionados en `data/raw/unsw_nb15/`. T2a y T2b (§3, P2) están
-integradas en `main` (2026-11-26).
+integradas en `main` (2026-11-26). T5 (§4.2 ensamble, P3) está lista en la rama `p3/t5-ensamble`
+(2026-11-26).
 Fecha indicada por el enunciado: **domingo 29 de noviembre de 2026**, sin hora.
 
 Este archivo es la fuente del estado de trabajo. Leerlo antes de empezar una
@@ -32,15 +33,16 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 | --- | --- | --- | --- |
 | P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T3 integrada el 2026-11-25: T4 desbloqueada. Los CSV llegan con el pull (`data/raw/unsw_nb15/`); revisar D9 |
 | P2 | Revisiones (T5 y T7) | — | D10 aceptada por P1 y P3 y su revisión integrada en `main` el 2026-11-26. T2a y T2b integradas en `main` el 2026-11-26 (§3 completa; los números del análisis se revisan en T8). Entorno fijado, nbdime y PyCharm (ciclo *Clear All Outputs* incluido) comprobados en Linux x86_64. Entorno fijado y nbdime comprobados en Windows 11 el 2026-11-26: SciPy ya no está bloqueado y el notebook completo se ejecuta sin errores |
-| P3 | T5 (en curso) | `p3/t5-ensamble` | Reservada el 2026-11-26. T3 integrada en `main` el 2026-11-25 (desbloquea T4). Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck) |
+| P3 | T5 (lista para integrar); luego T7 | `p3/t5-ensamble` | Reservada el 2026-11-26. T5 terminada y verificada en la rama (ver registro); D11 registrada para revisión de P2. T3 integrada en `main` el 2026-11-25. Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck) |
 
 - **Siguiente acción:** §3 (T2a y T2b) y la revisión de D10 ya están en `main`; D10 está aceptada. P2 ya
   comprobó el entorno fijado en Linux (con PyCharm) y en Windows, donde SciPy ya carga
   (casilla de T0). T3 ya está en `main`, así que P1 puede hacer T4: los dos CSV
   llegan con el pull, en `data/raw/unsw_nb15/`; revisar D9 (duplicados). **Ojo:** `main` se
   reescribió el 2026-11-25 (ver registro); quien haya hecho pull antes debe ejecutar
-  `git fetch origin` y `git reset --hard origin/main` (sin cambios locales pendientes). Siguen abiertas T4 (P1) y
-  T5 (P3); T1b, T2a y T2b ya están en `main`.
+  `git fetch origin` y `git reset --hard origin/main` (sin cambios locales pendientes). Sigue abierta T4 (P1). T5 (P3) está lista en
+  `p3/t5-ensamble`: P2 revisa D11 y el contrato ensamble → ECE resuelto en T5; luego P3 sigue con
+  T7, que espera T4 solo para la decisión de L2. T1b, T2a y T2b ya están en `main`.
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
 
@@ -246,6 +248,20 @@ Propuesta de P2 (D6), aceptada por P3 el 2026-11-23: el ECE recibe `X`, `y`,
 `run_ensemble_uq` y `quantify_uncertainty_ensemble` devuelven esa varianza por
 observación; T5 documenta las formas exactas.
 
+**Resuelto en T5 (2026-11-26, D11):**
+
+- `train_ensemble(X, y, N=10, seed=None)` recibe `X` (n × D, float) e `y` (0/1, forma (n,)) y
+  devuelve un `dict` con `W` (N × (D + 1), sesgo en la columna 0), `N`, `indices` (filas de cada
+  partición) y `seed` (`SEEDS["s4_2_ensamble"]` si es `None`).
+- `run_ensemble_uq(X, model, return_predictions=False, batch_size=10000)` devuelve la varianza
+  muestral (con N − 1) de los N puntajes, forma (n,), float64. Con `return_predictions=True`
+  devuelve `(varianza, predicciones)`, con predicciones = 1 si el puntaje medio es ≥ 0 (enteros 0/1,
+  forma (n,)): son las `predictions` del ECE.
+- `quantify_uncertainty_ensemble(x, model, N=10)` exige que `model` tenga N miembros; con `x` de
+  forma (D,) devuelve un `float` y con (n, D), un vector (n,).
+- Uso en §4.4: `u, pred = run_ensemble_uq(X_test, ensamble, return_predictions=True)` y
+  `calculate_expected_calibration_error(X_test, y_test, u, pred)`.
+
 ### Configuración común (sección 0)
 
 La celda `s0-config` define `PROJECT_ROOT` (se busca hacia arriba desde el
@@ -422,17 +438,18 @@ repiten entre secciones.
 
 ### T5 — P3: ensamble y cuantificación de incertidumbre (fase 1)
 
-- [ ] Revisar el material de apoyo. El contrato ensamble → ECE ya está
-  acordado con P2 (D6).
-- [ ] Implementar `train_ensemble` con modelos de mínimos cuadrados de
-  clasificación según el enunciado, documentando cómo se construyen sus miembros.
-- [ ] Implementar `run_ensemble_uq` para evaluar la varianza de las salidas.
-- [ ] Implementar `quantify_uncertainty_ensemble(x, model, N=10)` reutilizando
+- [x] Revisar el material de apoyo (§2 de `EstimacionIncertidumbre.pdf`). El contrato ensamble → ECE
+  ya está acordado con P2 (D6); las formas exactas están en «Resuelto en T5».
+- [x] Implementar `train_ensemble` con modelos de mínimos cuadrados de
+  clasificación según el enunciado, documentando cómo se construyen sus miembros (D11).
+- [x] Implementar `run_ensemble_uq` para evaluar la varianza de las salidas.
+- [x] Implementar `quantify_uncertainty_ensemble(x, model, N=10)` reutilizando
   el ensamble entrenado; usar puntajes del producto punto antes de la activación.
-- [ ] Documentar y ejecutar al menos dos pruebas unitarias de la
+- [x] Documentar y ejecutar al menos dos pruebas unitarias de la
   cuantificación, con datos sintéticos si T3 no está integrada; cubrir
-  también las funciones auxiliares según la regla general.
-- [ ] Ejecutar desde cero e integrar en `main`.
+  también las funciones auxiliares según la regla general (16 pruebas en `s4-2-pruebas`).
+- [x] Ejecutar desde cero (ver registro).
+- [ ] Integrar en `main` y avisar a P2 para la revisión de D11.
 
 ### T6 — P2: expected calibration error (fase 1)
 
@@ -509,6 +526,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | D8 | 4–5 | T3, T4, T5, T7 | **Acordado en T0.** «Normalización L2» no está definida y los atributos crudos de UNSW-NB15 van de 0/1 hasta unos 10⁹: sin escalar, la tangente hiperbólica se satura, y una L2 sobre datos crudos borraría casi todos los atributos. Se interpreta como L2 por fila sobre un preprocesamiento base común (one-hot, log1p y z-score); ver el contrato de datos y el protocolo de comparación. |
 | D9 | 4–5 | T3, T4, T5, T7 | **Acordado por P3 en T3 (2026-11-25); P1 y P2 pueden revisarlo.** En los dos CSV unidos, 103 575 filas (40.2 %) repiten exactamente los atributos y la etiqueta de otra (96 297 son ataques, sobre todo *Generic*), y 414 grupos de atributos idénticos tienen etiquetas distintas. Con las particiones de T3, el 45.2 % de las filas de prueba (media de las 30 particiones 80/20; 44.5 % en las 10 de 70/30) tienen una copia exacta de sus atributos en entrenamiento, así que la tasa de aciertos, el F1 y el ECE resultan optimistas. Se **conservan todas las filas**, como fija el contrato y como pide el enunciado («datos provistos»). La superposición se mide y documenta en el notebook (`s4-datos-carga`), y T4 y T7 la mencionan como limitación al analizar. `load_unsw_nb15(..., drop_duplicates=True)` permite repetir el análisis sin duplicados (154 098 filas, 44.4 % ataques). |
 | D10 | 3–4 | T2a, T2b | **Propuesto por P2 en T2a (2026-11-26); aceptado por P1 y P3 (2026-11-26).** Para §3.2: (1) γ ≠ 0 «a conveniencia» = 0.9, el mismo valor probado en §2; (2) P = 50 iteraciones = 50 épocas en lote completo sobre el 80 % de entrenamiento («todo el conjunto de muestras» se lee como lote completo), con el MSE de validación (20 %) registrado en cada época; (3) «error final de convergencia» = MSE de la época 50, aunque la red no haya convergido; (4) `max_weights`, que el enunciado no fija, se elige entre {0.5, 1, 2, 5} con el MSE final de **entrenamiento** (menor media de las medianas de las 8 combinaciones), sin usar validación; (5) cada combinación se repite con 20 semillas de pesos iniciales derivadas de `SEEDS["s3_r2"]`, las mismas en las 8 combinaciones y con la misma partición, y se reportan mediana, rango intercuartílico, media y desviación estándar. **Revisión de P2 (2026-11-26, rama `p2/t2-d10`):** el criterio de (4) se mantiene, pero elige 1 por poco (media 0.102 frente a 0.115 con 0.5 y 0.116 con 2) y otros criterios razonables no coinciden: la media de los log₁₀ elige 2 y el rango medio, 1. Con los cuatro valores, M = 20 termina con menos error que M = 2 y γ = 0.9 con menos que γ = 0 en los cuatro pares; solo cambia el orden entre b) y c). Se documentan en §3 esa sensibilidad (celda `s3-max-weights-sensibilidad`, sin entrenamientos nuevos), que `max_weights` también fija la escala de la inicialización, que la variabilidad entre semillas refleja solo los pesos iniciales y que el recorte acota la salida (|aˢ| ≤ (M + 1)·`max_weights`; con M = 2 y `max_weights` = 1, el MSE no baja de 2.2·10⁻³, un piso que no se alcanza en la época 50). |
+| D11 | 4–5 | T5, T7 | **Propuesto por P3 en T5 (2026-11-26); pendiente de revisión de P2.** El enunciado pide «modelos de mínimos cuadrados de clasificación» con la salida del producto punto y la firma `quantify_uncertainty_ensemble(x, model, N = 10)`, sin definir `model` ni cómo resolver los mínimos cuadrados. Acuerdos: (1) cada miembro tiene una salida con objetivos t = 2y − 1 ∈ {−1, +1}; su puntaje es w·[1, x], sin activación (la activación sería el signo); (2) se resuelve con `numpy.linalg.lstsq` (solución de **norma mínima**): los bloques one-hot suman 1 como el sesgo, así que XᵀX es singular (rango 189 de 195 en una partición 70/30), y con N = 1000 cada miembro tiene unas 180 filas para unos 195 pesos. Una prueba exploratoria con ridge λ = 1 dio aciertos y ECE casi iguales, pero agrega un hiperparámetro; con norma mínima y N = 1000 aparecen varianzas atípicas grandes, propias de miembros con poca información; (3) particiones disjuntas y aleatorias (`array_split` de una permutación con `SEEDS["s4_2_ensamble"]`), como describe el material; (4) `model` es el ensamble que devuelve `train_ensemble` y `N` debe coincidir con su número de miembros (si no, `ValueError`); `x` puede ser (D,) o (n, D); (5) la predicción del ensamble es el signo del puntaje medio (las `predictions` de D6). |
 
 ## Acuerdos vigentes
 
@@ -539,6 +557,9 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 - Commits sin líneas de coautoría automáticas (2026-11-25, P3).
 - Datos UNSW-NB15 (T3): particiones estratificadas por `label`, semillas 4000–4029 (80/20) y
   4500–4509 (70/30), se conservan los duplicados (D9) y `s4_unsw` se comparte entre secciones.
+- Ensamble de §4.2 (T5, D11): miembros de mínimos cuadrados con una salida y objetivos ±1, solución de
+  norma mínima (`lstsq`), particiones disjuntas aleatorias con `SEEDS["s4_2_ensamble"]`, `model` =
+  ensamble entrenado y predicción por el signo del puntaje medio.
 - XOR de §2 (T1b): K = 2 one-hot; error cero = 0 errores de clasificación y
   MSE ≤ 0.01 sostenidos hasta el final; 36 configuraciones × 20 semillas.
 - R² de §3 (T2a y T2b): `make_blobs` y `make_moons` con 300 muestras y separabilidad comprobada
@@ -571,6 +592,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-26 | P2 (revisión de D10, rama `p2/t2-d10`) | Revisada D10 frente al enunciado y al código de §3 en `main`. Los puntos (1), (2), (3) y (5) se sostienen. El punto (4) se mantiene, pero la elección es sensible al criterio: la media de las medianas elige `max_weights` = 1 por poco (0.102 frente a 0.115 y 0.116), la media de los log₁₀ elegiría 2 y el rango medio, 1 (2 frente a 2.125). En §3: `s3-max-weights` conserva los resultados de cada valor; la celda nueva `s3-max-weights-sensibilidad` muestra los tres criterios y las comparaciones de 3.2 b con cada valor, sin entrenar redes nuevas; `s3-experimento-descripcion` agrega que `max_weights` también fija la escala de la inicialización y que la variabilidad entre semillas refleja solo los pesos iniciales; `s3-analisis` agrega la sensibilidad y el piso del MSE que impone el recorte con M = 2. Con los cuatro valores, M = 20 termina con menos error que M = 2 y γ = 0.9 con menos que γ = 0 en los cuatro pares; el orden entre b) y c) se invierte con `max_weights` ≥ 2. Notebook completo ejecutado dos veces desde un kernel limpio en Linux x86_64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 3 min; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos) y 13/13 de §4.3, sin errores; los resultados de §3 son los mismos que en `main` (`max_weights` elegido = 1). No se agregaron funciones ni pruebas. El diff del notebook solo toca celdas de §3, sin salidas. | P1 y P3 aceptan o comentan D10; P2 integra `p2/t2-d10`. |
 | 2026-11-26 | P2 (integración) | Integrada en `main` la rama `p2/t2-d10`, sin conflictos: `main` no había cambiado desde la creación de la rama (`8667828`). P1 y P3 aceptaron D10. Las verificaciones son las de la fila anterior; las celdas integradas son idénticas a las ejecutadas. | T8 revisa los números de `s3-analisis`, incluida la sensibilidad a `max_weights`. |
 | 2026-11-26 | P2 (entorno en Windows) | Python 3.15.0 de 64 bits instalado en Windows 11 (AMD64) con el administrador de instalaciones de Python (`py install 3.15.0-64`); se borró el `.venv` anterior (Python 3.14.7) y se creó uno nuevo con `requirements.txt`. `pip check` sale limpio y `nbdime config-git --enable` está hecho. **SciPy ya no está bloqueado:** SciPy 1.18.1 y scikit-learn 1.9.1 se importan, incluido `scipy.stats.wilcoxon`; el bloqueo de la DLL `_fblas` registrado el 2026-11-20 (con Python 3.14.7) no se repite; no se averiguó qué lo eliminó. Notebook completo ejecutado desde un kernel limpio con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 2 min 16 s; salida fuera del repositorio), sin errores en ninguna celda: `s0-config` imprime Python 3.15.0 y las versiones fijadas; 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos) y 13/13 de §4.3. Resultados iguales a los de Linux y macOS: §2 elige M = 4, `max_weights` = 2, α = 0.5, γ = 0 (20/20 semillas, época 38); §3 elige `max_weights` = 1 con la misma sensibilidad al criterio; §4 cuenta 103 575 filas duplicadas (40.2 %). No se probó PyCharm en Windows. | Ninguno para T0 por parte de P2; P2 revisa T5 y T7 cuando lleguen. |
+| 2026-11-26 | P3 (T5, rama `p3/t5-ensamble`) | Revisado el material de apoyo (§2: N particiones, un modelo por partición, varianza con N − 1) y registrado D11. Prueba exploratoria previa, no registrada como resultado, sobre la partición 70/30 de semilla 4500 con N ∈ {10, 100, 1000}: norma mínima y ridge λ = 1 dieron aciertos (~0.90) y ECE (~0.09) casi iguales, y XᵀX es singular. Implementadas en §4.2 las celdas `s4-2-descripcion` (método, D11 y referencia a Bishop 2006, §4.1.3), `s4-2-funciones` (`train_ensemble`, `run_ensemble_uq`, `quantify_uncertainty_ensemble` y cinco auxiliares), `s4-2-pruebas-descripcion`, `s4-2-pruebas` (16 pruebas con datos sintéticos y ensambles armados a mano), `s4-2-demostracion-descripcion` y `s4-2-demostracion` (N = 10 sobre UNSW-NB15, `l2=False` mientras `USE_L2` sea `None`). Para comprobar que las pruebas detectan errores, se introdujeron a propósito diez errores (varianza entre N, objetivos 0/1, puntajes con activación, sesgo al final, particiones con reemplazo, miembros con todos los datos, ridge, predicción constante, N sin validar y bloques mal indexados): cada uno hizo fallar al menos una prueba. La prueba de compatibilidad con el ECE no lo llama, porque §4.3 está después de §4.2 en el notebook. Notebook completo (idéntico byte a byte al de la rama) ejecutado desde un kernel limpio en Linux x86_64 con `ExecutePreprocessor` de nbconvert, sin `TP3_QUICK` (unos 3 min 20 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos), 16/16 de §4.2 y 13/13 de §4.3, sin advertencias. `s4-2-demostracion` se ejecutó sin errores: entrenamiento en 1.1 s y evaluación de 77 302 observaciones en 0.04 s; la varianza media de las predicciones incorrectas es mayor que la de las correctas. El diff del notebook solo agrega celdas de §4.2, sin salidas. | P3 integra T5; P2 revisa D11. P3 sigue con T7. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
