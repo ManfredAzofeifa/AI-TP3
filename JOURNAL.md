@@ -3,7 +3,9 @@
 Estado al **23 de noviembre de 2026**: T0 (acuerdos, contratos, entorno fijado
 y configuración común), T1a (clase `Multilayer_perceptron` de §1) y T1b (XOR de
 §2) integradas en `main`; fase 1 en curso. En `main` están además la investigación de §3.2 b y el
-ECE de §4.3; no hay datos descargados ni experimentos ejecutados.
+ECE de §4.3. T3 (preparación de datos UNSW-NB15, P3) está integrada en `main` (2026-11-25):
+los datos se descargan a mano (ver «Origen de los datos» en §4 del notebook) y no hay experimentos
+ejecutados.
 Fecha indicada por el enunciado: **domingo 29 de noviembre de 2026**, sin hora.
 
 Este archivo es la fuente del estado de trabajo. Leerlo antes de empezar una
@@ -28,14 +30,15 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T4 espera T3 (P3); el código puede escribirse antes contra el contrato de datos |
+| P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T3 integrada el 2026-11-25: T4 desbloqueada. Descargar los dos CSV según «Origen de los datos» (§4 del notebook) y revisar D9 |
 | P2 | T2a (resto de §3) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego seguir T2a (D4 resuelto). La investigación de §3.2 b y el ECE de T6 ya están en `main` |
-| P3 | T3 (en curso); luego T5 | `p3/t3-datos` | Reservada el 2026-11-25. Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck): `s0-config` imprime Python 3.15.0 y las versiones fijadas. Acordado para T3: particiones estratificadas por `label`, semillas 4000–4029 (80/20) y 4500–4509 (70/30), one-hot y z-score propios con pandas/NumPy |
+| P3 | T5 (siguiente) | — | T3 integrada en `main` el 2026-11-25 (desbloquea T4). Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck). Sigue T5 |
 
-- **Siguiente acción:** P2 y P3 instalan el entorno fijado (casilla de T0) y
-  configuran PyCharm y nbdime según `CONTRIBUTING.md`. T1a ya está en `main`:
-  P2 puede ejecutar T2b cuando integre T2a, y P1 hace T4 cuando P3 integre T3.
-  Siguen abiertas T2a (P2), T3 y T5 (P3); T1b ya está en `main`.
+- **Siguiente acción:** P2 instala el entorno fijado (casilla de T0) y
+  configura PyCharm y nbdime según `CONTRIBUTING.md`; P3 ya lo hizo. T1a ya está en `main`:
+  P2 puede ejecutar T2b cuando integre T2a. T3 ya está en `main`, así que P1 puede hacer T4: descargar los dos
+  CSV según «Origen de los datos» (§4 del notebook) y revisar D9 (duplicados). Siguen abiertas T2a
+  (P2) y T5 (P3); T1b ya está en `main`.
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
 
@@ -190,6 +193,27 @@ registrar el nuevo acuerdo aquí y avisar a quien dependa de ellos.
   particiones 80/20 de §4.1 y las 10 particiones 70/30 de §4.4 usan semillas
   derivadas de `SEEDS["s4_datos"]` que T3 registra. T3 documenta si estratifica
   por `label`.
+- **Resuelto en T3 (2026-11-25):**
+  - Archivos: `UNSW_NB15_training-set.csv`, con 175 341 filas y SHA-256
+    `bec7dd5ec88dc2a0ccc7a07879d338395ed7421750f675fd0339e07dfe0648fa`, y
+    `UNSW_NB15_testing-set.csv`, con 82 332 filas y SHA-256
+    `734fe6642edf758f7c94d7d9149426b49d202fe8e7bf0bef47392489c3c0a559`; en total, 257 673 filas.
+    Se descargan a mano desde la carpeta de SharePoint que enlaza
+    <https://research.unsw.edu.au/projects/unsw-nb15-dataset> (no se pueden bajar con `curl`); los
+    pasos están en «Origen de los datos» (§4 del notebook). `s4-datos-carga` comprueba las sumas.
+  - Atributos: 42, de los cuales 39 son numéricos y 3 categóricos (`proto` 133, `service` 13 y
+    `state` 11 valores). Ninguna numérica tiene negativos, así que log1p se aplica a las 39. No hay
+    faltantes. Clase: 164 673 ataques (63.9 %) y 93 000 normales. `X` lleva primero las numéricas
+    en el orden del CSV y luego el one-hot por orden alfabético de categoría; D = 195 en la
+    partición 80/20 de semilla 4000 (depende de las categorías presentes en entrenamiento).
+  - Particiones **estratificadas por `label`** (`train_test_split`). Semillas:
+    `S4_SEMILLAS_80_20` = 4000–4029 (`SEEDS["s4_datos"] + i`) y `S4_SEMILLAS_70_30` = 4500–4509
+    (`SEEDS["s4_datos"] + 500 + i`).
+  - One-hot y z-score implementados con pandas/NumPy, sin transformadores de scikit-learn.
+  - `load_unsw_nb15` agrega el parámetro opcional `drop_duplicates=False` (D9), compatible con la
+    firma acordada. El `DataFrame` cargado queda en `s4_unsw` y las demás secciones lo reutilizan
+    sin modificarlo.
+  - Para la red de §1 con K = 1, se pasa `T = y_train.reshape(-1, 1)`.
 
 ### Comparación con y sin L2 (§4.1, T4)
 
@@ -340,16 +364,20 @@ repiten entre secciones.
 
 ### T3 — P3: preparación de datos UNSW-NB15 (fase 1)
 
-- [ ] Descargar los dos CSV particionados oficiales en `data/raw/unsw_nb15/`
-  y registrar la URL, los conteos y una suma de verificación de cada archivo.
-- [ ] Confirmar la clase ataque, los atributos y las columnas excluidas
-  (`id`, `label`, `attack_cat`) según el contrato de datos.
-- [ ] Implementar `load_unsw_nb15`, `split_unsw` y `preprocess_unsw` con el
+- [x] Descargar los dos CSV particionados oficiales en `data/raw/unsw_nb15/`
+  y registrar la URL, los conteos y una suma de verificación de cada archivo
+  (contrato de datos, «Resuelto en T3»).
+- [x] Confirmar la clase ataque, los atributos y las columnas excluidas
+  (`id`, `label`, `attack_cat`) según el contrato de datos. Se encontraron
+  duplicados masivos: se registró D9.
+- [x] Implementar `load_unsw_nb15`, `split_unsw` y `preprocess_unsw` con el
   orden acordado: one-hot, log1p, z-score ajustado con entrenamiento y L2 por
   fila opcional (`l2`).
-- [ ] Definir las 30 particiones 80 % / 20 % (§4.1) y las 10 particiones
+- [x] Definir las 30 particiones 80 % / 20 % (§4.1) y las 10 particiones
   70 % / 30 % (§4.4), con semillas derivadas de `SEEDS["s4_datos"]`.
-- [ ] Documentar y probar las funciones; integrar en `main` y avisar a P1.
+- [x] Documentar y probar las funciones (21 pruebas en `s4-datos-pruebas`).
+- [x] Integrar en `main` (2026-11-25): desbloquea T4.
+- [ ] Avisar a P1 de que T3 está en `main` (descargar los CSV y revisar D9).
 
 ### T4 — P1: UNSW-NB15 y comparación de normalización L2 (fase 2, requiere T1a y T3)
 
@@ -451,6 +479,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | D6 | 5 | T5, T6 | **Acordado por P2 el 2026-11-20; aceptado por P3 el 2026-11-23.** Definición del material (§4): ECE = Σ \|B_m\|/N · \|acc(B_m) − s̄(B_m)\|, ignorando cubetas vacías, con puntajes en [0, 1]. El material no fija la conversión de la varianza ni el número de cubetas, y la firma no recibe predicciones. Acuerdos: (1) puntaje s = 1 − varianza normalizada min-max, porque la varianza no está acotada y crece con la falta de confianza; (2) reportar además la correlación de Pearson entre incertidumbre y acierto, alternativa del material; (3) 10 cubetas de igual ancho, configurables; (4) agregar el parámetro `predictions`, con etiquetas obtenidas de la salida de la última capa antes de la activación. |
 | D7 | 4–5 | T7 | §4 anuncia 60 puntos pero sus incisos suman 50. La última instrucción estadística termina en “verifique si existe” sin completar la hipótesis. Confirmar alcance; el plan conserva todos los incisos visibles. |
 | D8 | 4–5 | T3, T4, T5, T7 | **Acordado en T0.** «Normalización L2» no está definida y los atributos crudos de UNSW-NB15 van de 0/1 hasta unos 10⁹: sin escalar, la tangente hiperbólica se satura, y una L2 sobre datos crudos borraría casi todos los atributos. Se interpreta como L2 por fila sobre un preprocesamiento base común (one-hot, log1p y z-score); ver el contrato de datos y el protocolo de comparación. |
+| D9 | 4–5 | T3, T4, T5, T7 | **Acordado por P3 en T3 (2026-11-25); P1 y P2 pueden revisarlo.** En los dos CSV unidos, 103 575 filas (40.2 %) repiten exactamente los atributos y la etiqueta de otra (96 297 son ataques, sobre todo *Generic*), y 414 grupos de atributos idénticos tienen etiquetas distintas. Con las particiones de T3, el 45.2 % de las filas de prueba (media de las 30 particiones 80/20; 44.5 % en las 10 de 70/30) tienen una copia exacta de sus atributos en entrenamiento, así que la tasa de aciertos, el F1 y el ECE resultan optimistas. Se **conservan todas las filas**, como fija el contrato y como pide el enunciado («datos provistos»). La superposición se mide y documenta en el notebook (`s4-datos-carga`), y T4 y T7 la mencionan como limitación al analizar. `load_unsw_nb15(..., drop_duplicates=True)` permite repetir el análisis sin duplicados (154 098 filas, 44.4 % ataques). |
 
 ## Acuerdos vigentes
 
@@ -474,6 +503,8 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 - El informe LaTeX se redacta en T9, con el notebook terminado (D1).
 - Red de §1 (T1a): AdaGrad con ε = 10⁻⁸; deltas con el gradiente exacto del
   MSE de `get_error`; la captura de la prueba de entrenamiento se toma en T8.
+- Datos UNSW-NB15 (T3): particiones estratificadas por `label`, semillas 4000–4029 (80/20) y
+  4500–4509 (70/30), se conservan los duplicados (D9) y `s4_unsw` se comparte entre secciones.
 - XOR de §2 (T1b): K = 2 one-hot; error cero = 0 errores de clasificación y
   MSE ≤ 0.01 sostenidos hasta el final; 36 configuraciones × 20 semillas.
 
@@ -493,6 +524,8 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-23 | P1 (T1a, rama `p1/t1a-mlp`) | Implementada `Multilayer_perceptron` en §1 según el contrato, solo con NumPy: celdas `s1-descripcion`, `s1-derivacion` (propagación, delta con jacobiano de la softmax y MSE, caso K = 1, AdaGrad con momentum y cambios respecto de la retropropagación del curso), `s1-mlp-clase`, `s1-pruebas-descripcion`, `s1-pruebas` y `s1-captura-entrenamiento` (pendiente de T8). Acordados ε = 10⁻⁸, los deltas como gradiente exacto de `get_error` y la captura en T8. 20 pruebas, incluida la comprobación del gradiente con diferencias centrales para K = 3 y K = 1. Para confirmar que las pruebas detectan errores, se introdujeron a propósito ocho errores en el código (jacobiano, derivada de tanh, escala del error, momentum, acumulación de G, recorte, fila del sesgo y umbral): cada uno hizo fallar al menos una prueba. Notebook completo ejecutado desde un kernel limpio en macOS arm64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (salida fuera del repositorio): 20/20 pruebas de §1 y 13/13 de §4.3 correctas. El diff del notebook solo agrega celdas de §1, sin salidas. No probado en PyCharm, Linux, Windows ni WSL. | P1 integra T1a; P2 (T2b) y P1 (T4) ya pueden usar la red. |
 | 2026-11-23 | P1 (integración) | Integrada en `main` la rama `p1/t1a-mlp` (sin conflictos). Las verificaciones son las de la fila anterior. | P1 sigue con T1b. |
 | 2026-11-23 | P1 (T1b, rama `p1/t1b-xor`) | Resuelto XOR en §2 con la red de §1: celdas `s2-planteamiento`, `s2-funciones-descripcion`, `s2-funciones` (`s2_entrenar_xor`, `s2_epoca_convergencia`, `s2_dibujar_red`), `s2-pruebas` (8 pruebas), `s2-calibracion` (rejilla de M, `max_weights`, α y γ: 36 configuraciones × 20 semillas derivadas de `SEEDS["s2_xor"]` × 2000 épocas; 5 semillas y 500 épocas con `TP3_QUICK`), `s2-curvas` (mediana y rango intercuartílico del MSE de cada configuración), `s2-arquitectura` y `s2-diagrama`, `s2-convergencia` (corrida representativa, curvas de MSE y de errores de clasificación, predicciones) y `s2-analisis` (pendiente de T8). Acordados con P1 la salida K = 2, el criterio de error cero y la calibración con varias semillas (D5). Notebook completo ejecutado dos veces desde un kernel limpio en macOS arm64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 100 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2 y 13/13 de §4.3; las dos ejecuciones eligieron la misma configuración (M = 4, `max_weights` = 2, α = 0.5, γ = 0; 20/20 semillas convergen, época mediana 38) y clasificaron bien las cuatro entradas. Con `TP3_QUICK=1` también se ejecuta completo. El diff del notebook solo agrega celdas de §2, sin salidas. No probado en PyCharm, Linux, Windows ni WSL. | P1 integra T1b; T4 espera T3. |
+| 2026-11-25 | P3 (entorno y T3, rama `p3/t3-datos`) | **Entorno:** Python 3.15.0 instalado con `uv` en Linux (Steam Deck) y `requirements.txt` instalado en un `.venv` nuevo; las versiones coinciden con el archivo y `pip check` sale limpio (solo faltan `appnope` y `pywinpty`, que son de macOS y Windows). `nbdime config-git --enable` hecho y probado con `git diff` del notebook. PyCharm con el intérprete del `.venv` e *IDE-Managed Server*: `s0-config` imprime Python 3.15.0 y las versiones fijadas, y el diff solo mostró la salida de `s0-config` y sus tiempos, con el orden de claves intacto. **T3:** descargados los dos CSV oficiales (conteos y SHA-256 en el contrato de datos) y revisadas columnas, clases, faltantes, negativos, categorías y duplicados (D9). Implementadas en §4 las celdas `s4-datos-fuente`, `s4-datos-funciones-descripcion`, `s4-datos-funciones` (`load_unsw_nb15`, `split_unsw`, `preprocess_unsw` y siete auxiliares), `s4-datos-pruebas-descripcion`, `s4-datos-pruebas` (21 pruebas con datos sintéticos), `s4-datos-carga-descripcion` y `s4-datos-carga` (verificación de archivos, resumen, duplicados, superposición en las 40 particiones y preprocesamiento con y sin L2). Referencia de Moustafa y Slay (2015) comprobada en Crossref. Para confirmar que las pruebas detectan errores, se introdujeron a propósito siete errores (partición sin estratificar, z-score ajustado con prueba, σ = 0 sin reemplazar, log1p con negativos, categorías tomadas de prueba, L2 solo en las numéricas y duplicados comparados con `id`): cada uno hizo fallar al menos una prueba. Leer sin `utf-8-sig` no es un error, porque pandas ya descarta el BOM. Notebook completo ejecutado desde un kernel limpio en Linux x86_64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 3 min 15 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2, 21/21 de §4 (datos) y 13/13 de §4.3. `s4-datos-carga` se ejecutó sin errores: superposición media de 45.2 % (80/20) y 44.5 % (70/30); X de 195 columnas, sin `NaN`, en 0.7 s sin L2 y 1.3 s con L2. El diff del notebook solo agrega celdas de §4 (preparación de datos), sin salidas. | P3 integra T3; P1 hace T4. P3 sigue con T5. |
+| 2026-11-25 | P3 (integración) | Integrada en `main` la rama `p3/t3-datos`, sin conflictos: `main` no había cambiado desde la reserva (`4f36e5f`). Las verificaciones son las de la fila anterior; las celdas integradas son idénticas a las ejecutadas. | P1 hace T4; P3 sigue con T5. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
