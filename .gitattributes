@@ -16,6 +16,11 @@
 *.jpeg binary
 *.gif binary
 
+# Datos versionados byte a byte: sin conversión de fin de línea ni diffs. Los
+# CSV de UNSW-NB15 usan CRLF; si Git los normalizara, cambiarían sus sumas
+# SHA-256 y la verificación de s4-datos-carga fallaría.
+data/** binary
+
 *.ipynb	diff=jupyternotebook
 
 *.ipynb	merge=jupyternotebook

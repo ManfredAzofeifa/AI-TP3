@@ -52,8 +52,10 @@ mantienen en `JOURNAL.md`; revisarlo también antes de dar una tarea por termina
   para los mínimos exigidos y las inconsistencias del enunciado.
 - Reiniciar el kernel y ejecutar todas las celdas antes de integrar una tarea
   con código. Registrar si algo no pudo ejecutarse y por qué.
-- Mantener los datos completos y artefactos transitorios fuera de Git. Registrar
-  su origen, preparación y rutas para que otra persona pueda reproducirlos.
+- Versionar en Git los datos (`data/`) y los resultados (`results/`) que otra
+  persona pueda usar, para que nadie tenga que volver a descargarlos ni a
+  generarlos. `data/` se versiona byte a byte (`.gitattributes`). Registrar su
+  origen, preparación y rutas para que otra persona pueda reproducirlos.
 - No inventar métricas, ejecuciones, referencias ni resultados. No descargar
   datasets ni ejecutar experimentos si la tarea solo prepara documentación
   o estructura.

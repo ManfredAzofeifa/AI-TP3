@@ -4,7 +4,7 @@ Estado al **23 de noviembre de 2026**: T0 (acuerdos, contratos, entorno fijado
 y configuración común), T1a (clase `Multilayer_perceptron` de §1) y T1b (XOR de
 §2) integradas en `main`; fase 1 en curso. En `main` están además la investigación de §3.2 b y el
 ECE de §4.3. T3 (preparación de datos UNSW-NB15, P3) está integrada en `main` (2026-11-25):
-los datos se descargan a mano (ver «Origen de los datos» en §4 del notebook) y no hay experimentos
+los dos CSV de UNSW-NB15 están versionados en `data/raw/unsw_nb15/` y no hay experimentos
 ejecutados.
 Fecha indicada por el enunciado: **domingo 29 de noviembre de 2026**, sin hora.
 
@@ -30,14 +30,16 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T3 integrada el 2026-11-25: T4 desbloqueada. Descargar los dos CSV según «Origen de los datos» (§4 del notebook) y revisar D9 |
+| P1 | T4 (siguiente) | — | T1a y T1b integradas en `main` el 2026-11-23. T3 integrada el 2026-11-25: T4 desbloqueada. Los CSV llegan con el pull (`data/raw/unsw_nb15/`); revisar D9 |
 | P2 | T2a (resto de §3) | — | Instalar el entorno fijado y configurar PyCharm y nbdime; luego seguir T2a (D4 resuelto). La investigación de §3.2 b y el ECE de T6 ya están en `main` |
 | P3 | T5 (siguiente) | — | T3 integrada en `main` el 2026-11-25 (desbloquea T4). Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck). Sigue T5 |
 
 - **Siguiente acción:** P2 instala el entorno fijado (casilla de T0) y
   configura PyCharm y nbdime según `CONTRIBUTING.md`; P3 ya lo hizo. T1a ya está en `main`:
-  P2 puede ejecutar T2b cuando integre T2a. T3 ya está en `main`, así que P1 puede hacer T4: descargar los dos
-  CSV según «Origen de los datos» (§4 del notebook) y revisar D9 (duplicados). Siguen abiertas T2a
+  P2 puede ejecutar T2b cuando integre T2a. T3 ya está en `main`, así que P1 puede hacer T4: los dos CSV
+  llegan con el pull, en `data/raw/unsw_nb15/`; revisar D9 (duplicados). **Ojo:** `main` se
+  reescribió el 2026-11-25 (ver registro); quien haya hecho pull antes debe ejecutar
+  `git fetch origin` y `git reset --hard origin/main` (sin cambios locales pendientes). Siguen abiertas T2a
   (P2) y T5 (P3); T1b ya está en `main`.
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
@@ -198,9 +200,10 @@ registrar el nuevo acuerdo aquí y avisar a quien dependa de ellos.
     `bec7dd5ec88dc2a0ccc7a07879d338395ed7421750f675fd0339e07dfe0648fa`, y
     `UNSW_NB15_testing-set.csv`, con 82 332 filas y SHA-256
     `734fe6642edf758f7c94d7d9149426b49d202fe8e7bf0bef47392489c3c0a559`; en total, 257 673 filas.
-    Se descargan a mano desde la carpeta de SharePoint que enlaza
-    <https://research.unsw.edu.au/projects/unsw-nb15-dataset> (no se pueden bajar con `curl`); los
-    pasos están en «Origen de los datos» (§4 del notebook). `s4-datos-carga` comprueba las sumas.
+    Están versionados en `data/raw/unsw_nb15/` (acuerdo del 2026-11-25). Se obtuvieron a mano desde
+    la carpeta de SharePoint que enlaza <https://research.unsw.edu.au/projects/unsw-nb15-dataset>
+    (no se pueden bajar con `curl`); los pasos para volver a obtenerlos están en «Origen de los datos»
+    (§4 del notebook). `s4-datos-carga` comprueba las sumas.
   - Atributos: 42, de los cuales 39 son numéricos y 3 categóricos (`proto` 133, `service` 13 y
     `state` 11 valores). Ninguna numérica tiene negativos, así que log1p se aplica a las 39. No hay
     faltantes. Clase: 164 673 ataques (63.9 %) y 93 000 normales. `X` lleva primero las numéricas
@@ -377,7 +380,7 @@ repiten entre secciones.
   70 % / 30 % (§4.4), con semillas derivadas de `SEEDS["s4_datos"]`.
 - [x] Documentar y probar las funciones (21 pruebas en `s4-datos-pruebas`).
 - [x] Integrar en `main` (2026-11-25): desbloquea T4.
-- [ ] Avisar a P1 de que T3 está en `main` (descargar los CSV y revisar D9).
+- [ ] Avisar a P1 de que T3 está en `main` (los CSV llegan con el pull; revisar D9).
 
 ### T4 — P1: UNSW-NB15 y comparación de normalización L2 (fase 2, requiere T1a y T3)
 
@@ -503,6 +506,11 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 - El informe LaTeX se redacta en T9, con el notebook terminado (D1).
 - Red de §1 (T1a): AdaGrad con ε = 10⁻⁸; deltas con el gradiente exacto del
   MSE de `get_error`; la captura de la prueba de entrenamiento se toma en T8.
+- Datos y resultados en Git (2026-11-25, P3): se versionan `data/` y `results/` para que nadie tenga
+  que volver a descargar ni generar lo que otra persona ya tiene; `data/` se trata como binario en
+  `.gitattributes` (los CSV de UNSW-NB15 usan CRLF y sus sumas SHA-256 deben conservarse). Se
+  retiraron del `.gitignore` las exclusiones de `data/`, `results/raw/` y de artefactos (`*.pkl`, etc.).
+- Commits sin líneas de coautoría automáticas (2026-11-25, P3).
 - Datos UNSW-NB15 (T3): particiones estratificadas por `label`, semillas 4000–4029 (80/20) y
   4500–4509 (70/30), se conservan los duplicados (D9) y `s4_unsw` se comparte entre secciones.
 - XOR de §2 (T1b): K = 2 one-hot; error cero = 0 errores de clasificación y
@@ -526,6 +534,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-23 | P1 (T1b, rama `p1/t1b-xor`) | Resuelto XOR en §2 con la red de §1: celdas `s2-planteamiento`, `s2-funciones-descripcion`, `s2-funciones` (`s2_entrenar_xor`, `s2_epoca_convergencia`, `s2_dibujar_red`), `s2-pruebas` (8 pruebas), `s2-calibracion` (rejilla de M, `max_weights`, α y γ: 36 configuraciones × 20 semillas derivadas de `SEEDS["s2_xor"]` × 2000 épocas; 5 semillas y 500 épocas con `TP3_QUICK`), `s2-curvas` (mediana y rango intercuartílico del MSE de cada configuración), `s2-arquitectura` y `s2-diagrama`, `s2-convergencia` (corrida representativa, curvas de MSE y de errores de clasificación, predicciones) y `s2-analisis` (pendiente de T8). Acordados con P1 la salida K = 2, el criterio de error cero y la calibración con varias semillas (D5). Notebook completo ejecutado dos veces desde un kernel limpio en macOS arm64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 100 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2 y 13/13 de §4.3; las dos ejecuciones eligieron la misma configuración (M = 4, `max_weights` = 2, α = 0.5, γ = 0; 20/20 semillas convergen, época mediana 38) y clasificaron bien las cuatro entradas. Con `TP3_QUICK=1` también se ejecuta completo. El diff del notebook solo agrega celdas de §2, sin salidas. No probado en PyCharm, Linux, Windows ni WSL. | P1 integra T1b; T4 espera T3. |
 | 2026-11-25 | P3 (entorno y T3, rama `p3/t3-datos`) | **Entorno:** Python 3.15.0 instalado con `uv` en Linux (Steam Deck) y `requirements.txt` instalado en un `.venv` nuevo; las versiones coinciden con el archivo y `pip check` sale limpio (solo faltan `appnope` y `pywinpty`, que son de macOS y Windows). `nbdime config-git --enable` hecho y probado con `git diff` del notebook. PyCharm con el intérprete del `.venv` e *IDE-Managed Server*: `s0-config` imprime Python 3.15.0 y las versiones fijadas, y el diff solo mostró la salida de `s0-config` y sus tiempos, con el orden de claves intacto. **T3:** descargados los dos CSV oficiales (conteos y SHA-256 en el contrato de datos) y revisadas columnas, clases, faltantes, negativos, categorías y duplicados (D9). Implementadas en §4 las celdas `s4-datos-fuente`, `s4-datos-funciones-descripcion`, `s4-datos-funciones` (`load_unsw_nb15`, `split_unsw`, `preprocess_unsw` y siete auxiliares), `s4-datos-pruebas-descripcion`, `s4-datos-pruebas` (21 pruebas con datos sintéticos), `s4-datos-carga-descripcion` y `s4-datos-carga` (verificación de archivos, resumen, duplicados, superposición en las 40 particiones y preprocesamiento con y sin L2). Referencia de Moustafa y Slay (2015) comprobada en Crossref. Para confirmar que las pruebas detectan errores, se introdujeron a propósito siete errores (partición sin estratificar, z-score ajustado con prueba, σ = 0 sin reemplazar, log1p con negativos, categorías tomadas de prueba, L2 solo en las numéricas y duplicados comparados con `id`): cada uno hizo fallar al menos una prueba. Leer sin `utf-8-sig` no es un error, porque pandas ya descarta el BOM. Notebook completo ejecutado desde un kernel limpio en Linux x86_64 con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 3 min 15 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2, 21/21 de §4 (datos) y 13/13 de §4.3. `s4-datos-carga` se ejecutó sin errores: superposición media de 45.2 % (80/20) y 44.5 % (70/30); X de 195 columnas, sin `NaN`, en 0.7 s sin L2 y 1.3 s con L2. El diff del notebook solo agrega celdas de §4 (preparación de datos), sin salidas. | P3 integra T3; P1 hace T4. P3 sigue con T5. |
 | 2026-11-25 | P3 (integración) | Integrada en `main` la rama `p3/t3-datos`, sin conflictos: `main` no había cambiado desde la reserva (`4f36e5f`). Las verificaciones son las de la fila anterior; las celdas integradas son idénticas a las ejecutadas. | P1 hace T4; P3 sigue con T5. |
+| 2026-11-25 | P3 (datos en Git e historia de `main`) | **Historia reescrita:** los cuatro commits de T3 en `main` (`4f36e5f`, `d48a9b2`, `11b81e0` y `868f572`) se recrearon sin la línea `Co-Authored-By` que había agregado el asistente (`6210172`, `04308e9`, `9179837` y `d2c4c69`): los árboles de archivos, los autores y las fechas son idénticos, y `git diff 868f572 d2c4c69` sale vacío. Se publicó con force push en `main`, por decisión de P3, como excepción a `CONTRIBUTING.md`. Quien haya hecho pull antes: `git fetch origin` y `git reset --hard origin/main`. **Datos en Git:** se retiraron del `.gitignore` las exclusiones de `data/`, `results/raw/` y artefactos, y en `.gitattributes` se marcó `data/**` como binario. Comprobado: `git hash-object` con y sin filtros coincide para los dos CSV (bytes intactos, CRLF incluido). Actualizados `AGENTS.md`, `CONTRIBUTING.md`, `README.md`, este journal y `s4-datos-fuente`. El repositorio es público: subir los CSV redistribuye UNSW-NB15 (sus autores lo ofrecen para investigación académica, citando la fuente). | P3 sube los CSV y estos cambios; P1 y P2 hacen pull. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y

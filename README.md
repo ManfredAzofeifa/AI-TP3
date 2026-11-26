@@ -50,8 +50,8 @@ AI-TP3/
 ├── README.md
 ├── requirements.txt                 # Versiones exactas acordadas en T0
 ├── data/
-│   ├── raw/.gitkeep                 # Datos originales locales
-│   └── processed/.gitkeep           # Datos preparados locales
+│   ├── raw/unsw_nb15/               # Los dos CSV oficiales de UNSW-NB15 (versionados)
+│   └── processed/.gitkeep           # Datos preparados
 ├── docs/
 │   ├── assignment/
 │   │   ├── TP_3_redes_neuronales.pdf      # Enunciado
@@ -73,17 +73,19 @@ anterior, porque no son necesarios para iniciar este trabajo.
 
 ## Datos, resultados y entrega
 
-Los CSV de UNSW-NB15 van en `data/raw/unsw_nb15/` y los derivados en
-`data/processed/`; su contenido queda fuera de Git. Se usan los dos CSV
-particionados oficiales (unas 257 000 filas), según el contrato de datos de
-`JOURNAL.md`. En T3 (P3) se descargan y se documentan su fuente, conteos y
-carga dentro del notebook. Los datos de R² se generan con scikit-learn, como
-autorizó el docente (D4 de `JOURNAL.md`).
+Los dos CSV particionados oficiales de UNSW-NB15 (257 673 filas en total)
+están versionados en `data/raw/unsw_nb15/`, así que basta con hacer pull; los
+derivados van en `data/raw/` o `data/processed/`. Su fuente, conteos y sumas
+SHA-256 están en el contrato de datos de `JOURNAL.md` y en «Origen de los
+datos» (§4 del notebook). `.gitattributes` trata `data/` como binario para que
+Git no cambie los fines de línea de los CSV (usan CRLF) ni sus sumas. Los
+datos de R² se generan con scikit-learn, como autorizó el docente (D4 de
+`JOURNAL.md`).
 
 Las exportaciones finales del notebook irán en `results/figures/` y
-`results/tables/`, con nombres descriptivos. Los resultados transitorios pueden
-guardarse en `results/raw/`, excluido de Git. Las respuestas y el análisis se
-mantienen en el notebook.
+`results/tables/`, con nombres descriptivos. Los resultados intermedios que
+sirvan a otra persona pueden guardarse en `results/raw/`, que también se
+versiona. Las respuestas y el análisis se mantienen en el notebook.
 
 `docs/report/` recibe el informe LaTeX de T9 y `submission/` el ZIP de entrega
 (fuentes LaTeX, PDF y notebook).

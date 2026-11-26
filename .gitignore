@@ -31,23 +31,9 @@ htmlcov/
 .env.*
 !.env.example
 
-# Datos: conservar la estructura, sin versionar los datasets
-/data/raw/*
-!/data/raw/.gitkeep
-/data/processed/*
-!/data/processed/.gitkeep
-
-# Artefactos transitorios de experimentos
-/results/raw/
-*.pt
-*.pth
-*.ckpt
-*.pkl
-*.joblib
-*.sqlite
-*.sqlite3
-wandb/
-mlruns/
+# Los datos (data/) y los resultados (results/) sí se versionan, para que el
+# equipo no tenga que volver a descargarlos ni a generarlos (acuerdo del
+# 2026-11-25 en JOURNAL.md).
 
 # Exportaciones temporales e intermedios de LaTeX
 /build/

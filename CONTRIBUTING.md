@@ -141,5 +141,6 @@ ciegas conflictos del JSON del notebook.
 - Sin salidas en el diff del notebook (salvo el commit final de T8).
 - Entorno igual a `requirements.txt`; cambiar una versión o agregar una
   biblioteca solo con acuerdo registrado en el journal. Semillas registradas.
-- Datos locales fuera de Git; figuras y tablas compartidas solo si son útiles.
+- Datos y resultados que otra persona pueda usar, versionados en `data/` y
+  `results/`, con su origen registrado.
 - Journal actualizado con lo hecho, lo pendiente y las decisiones adoptadas.
