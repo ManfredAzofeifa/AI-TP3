@@ -32,7 +32,7 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T8 (siguiente) | — | T4 integrada en `main` el 2026-11-26 (`USE_L2 = False`). Pendientes propios: observaciones de P2 sobre T1a y T1b, y los análisis con números de §2 y §4.1 en T8 |
+| P1 | T8 (siguiente) | — | T4 integrada en `main` el 2026-11-26 (`USE_L2 = False`). Observaciones de P2 sobre T1a y T1b atendidas el 2026-11-26. Pendientes propios: los análisis con números de §2 y §4.1 y la captura de §1, en T8 |
 | P2 | Revisiones (T5 y T7) | — | D10 aceptada por P1 y P3 y su revisión integrada en `main` el 2026-11-26. T2a y T2b integradas en `main` el 2026-11-26 (§3 completa; los números del análisis se revisan en T8). Entorno fijado, nbdime y PyCharm (ciclo *Clear All Outputs* incluido) comprobados en Linux x86_64. Entorno fijado y nbdime comprobados en Windows 11 el 2026-11-26: SciPy ya no está bloqueado y el notebook completo se ejecuta sin errores |
 | P3 | T5 (lista para integrar); luego T7 | `p3/t5-ensamble` | Reservada el 2026-11-26. T5 terminada y verificada en la rama (ver registro); D11 registrada para revisión de P2. T3 integrada en `main` el 2026-11-25. Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck) |
 
@@ -159,6 +159,9 @@ registrar el nuevo acuerdo aquí y avisar a quien dependa de ellos.
   `get_error` (factor 2/(n·K), sin ½) con el jacobiano de la softmax; con K = 1
   se reduce al delta de la sigmoide. La derivación está en `s1-derivacion`.
   Deja en la instancia `delta_o`, `delta_s`, `grad_W_o` y `grad_W_s`.
+- **Recorte y momentum (revisión de P2, 2026-11-26):** el recorte no modifica `v`; un peso que el
+  gradiente empuja contra el límite puede quedar ahí varias épocas después de invertirse el
+  gradiente si γ > 0. Se conserva así (documentado en `s1-derivacion`).
 - **`train_mlp(num_epochs, X, T, alpha, gamma, X_val=None, T_val=None)`:**
   `alpha` y `gamma` reemplazan los valores guardados. Devuelve
   `{"train_error": [...], "val_error": [...]}`, con un valor por época medido
@@ -359,15 +362,20 @@ repiten entre secciones.
 - [x] Integrar en `main` (2026-11-23): desbloquea T2b y T4.
 - [ ] Avisar a P2 y P3 de que T1a está en `main`.
 - [x] Revisión de P2 (2026-11-26): sin errores; ver el registro de trabajo.
-- [ ] P1: decidir sobre el recorte con momentum (revisión de P2): un peso recortado
-  sigue acumulando `v` y puede quedar varias épocas en el límite. Documentarlo en
-  `s1-derivacion` o, con acuerdo registrado (cambia §2 y §3), anular `v` en los pesos recortados.
+- [x] P1: decidir sobre el recorte con momentum (revisión de P2): un peso recortado
+  sigue acumulando `v` y puede quedar varias épocas en el límite. **Decidido el 2026-11-26:
+  se documenta y no se cambia el código** (párrafo «Recorte y momentum» en `s1-derivacion`,
+  prueba `test_recorte_conserva_el_momentum` y fracción de pesos en el límite por corrida en
+  `s4-1-corridas`). Comprobado: en un peso aislado con α = 0.1 y γ = 0.9, `v` llegó a unos 2.9 α y
+  el peso quedó 7 épocas en el límite; en §4.1 (γ = 0.9, `max_weights` = 1), unos dos tercios de
+  `W_o` terminan en ±1.
 
 ### T1b — P1: XOR (fase 1, requiere T1a)
 
 - [x] Revisión de P2 (2026-11-26): sin errores; resultados idénticos en Linux x86_64.
-- [ ] P1: respaldar en el notebook o quitar la frase de `s2-planteamiento` según la cual
-  K = 2 converge con más semillas que K = 1 (revisión de P2).
+- [x] P1: respaldar en el notebook o quitar la frase de `s2-planteamiento` según la cual
+  K = 2 converge con más semillas que K = 1 (revisión de P2). Quitada el 2026-11-26: K = 2 se
+  justifica solo por usar la softmax de §1 sin el caso especial de D3.
 - [x] Resolver XOR: cuatro entradas booleanas y etiquetas, arquitectura y
   diagrama, calibración y curvas para los hiperparámetros probados
   (`s2-calibracion`, `s2-curvas`, `s2-diagrama`): 36 configuraciones × 20
@@ -612,6 +620,7 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-26 | P3 (T5, rama `p3/t5-ensamble`) | Revisado el material de apoyo (§2: N particiones, un modelo por partición, varianza con N − 1) y registrado D11. Prueba exploratoria previa, no registrada como resultado, sobre la partición 70/30 de semilla 4500 con N ∈ {10, 100, 1000}: norma mínima y ridge λ = 1 dieron aciertos (~0.90) y ECE (~0.09) casi iguales, y XᵀX es singular. Implementadas en §4.2 las celdas `s4-2-descripcion` (método, D11 y referencia a Bishop 2006, §4.1.3), `s4-2-funciones` (`train_ensemble`, `run_ensemble_uq`, `quantify_uncertainty_ensemble` y cinco auxiliares), `s4-2-pruebas-descripcion`, `s4-2-pruebas` (16 pruebas con datos sintéticos y ensambles armados a mano), `s4-2-demostracion-descripcion` y `s4-2-demostracion` (N = 10 sobre UNSW-NB15, `l2=False` mientras `USE_L2` sea `None`). Para comprobar que las pruebas detectan errores, se introdujeron a propósito diez errores (varianza entre N, objetivos 0/1, puntajes con activación, sesgo al final, particiones con reemplazo, miembros con todos los datos, ridge, predicción constante, N sin validar y bloques mal indexados): cada uno hizo fallar al menos una prueba. La prueba de compatibilidad con el ECE no lo llama, porque §4.3 está después de §4.2 en el notebook. Notebook completo (idéntico byte a byte al de la rama) ejecutado desde un kernel limpio en Linux x86_64 con `ExecutePreprocessor` de nbconvert, sin `TP3_QUICK` (unos 3 min 20 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos), 16/16 de §4.2 y 13/13 de §4.3, sin advertencias. `s4-2-demostracion` se ejecutó sin errores: entrenamiento en 1.1 s y evaluación de 77 302 observaciones en 0.04 s; la varianza media de las predicciones incorrectas es mayor que la de las correctas. El diff del notebook solo agrega celdas de §4.2, sin salidas. | P3 integra T5; P2 revisa D11. P3 sigue con T7. |
 | 2026-11-26 | P1 (T4, rama `p1/t4-l2`) | Implementado §4.1 con la red de §1 y la preparación de datos de T3: celdas `s4-1-planteamiento` (protocolo y limitaciones: calibración compartida y duplicados de D9), `s4-1-funciones-descripcion`, `s4-1-funciones` (`s4_1_metricas`, `s4_1_entrenar_y_evaluar`, `s4_1_comparar`), `s4-1-pruebas` (10 pruebas), `s4-1-calibracion-descripcion`, `s4-1-calibracion`, `s4-1-curvas`, `s4-1-corridas-descripcion`, `s4-1-corridas`, `s4-1-comparacion-descripcion`, `s4-1-comparacion` y `s4-1-analisis` (pendiente de T8). Acordados con P1 la calibración única por tratamiento, 100 épocas y K = 1 (ver «Resuelto en T4»). Antes se midió el costo (unos 0.1 s por época con 206 138 × 195) y se exploró el F1 de validación por época para fijar la rejilla y las épocas; esa exploración no se registra como resultado. Notebook completo ejecutado desde un kernel limpio en macOS arm64 (Apple M2 Pro) con `jupyter nbconvert --execute`, sin `TP3_QUICK` (17 min 47 s; calibración 232 s y corridas 719 s; salida fuera del repositorio), con `USE_L2 = None`: 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos), 10/10 de §4.1, 16/16 de §4.2 y 13/13 de §4.3. Ambos tratamientos eligieron M = 20, α = 0.1, γ = 0.9; F1 de la clase ataque 0.9427 ± 0.0020 sin L2 y 0.9382 ± 0.0020 con L2; tasa de aciertos 0.9262 y 0.9197; L2 fue peor en las 30 corridas (mediana de la diferencia de F1 −0.0044; Wilcoxon W = 0, p = 1.9·10⁻⁹; t pareada p = 9.8·10⁻¹³; Shapiro-Wilk de las diferencias p = 0.19). Con la regla de T0, `USE_L2 = False` en `s0-config`; en `s0-configuracion` se actualizaron la nota de L2 y la frase de que los CSV quedan fuera de Git (observación (3) de la revisión de P2). Después de ese cambio, notebook completo ejecutado con `TP3_QUICK=1` (1 min 7 s): todas las pruebas correctas, la decisión coincide con `USE_L2` y §4.2 usa `l2=False`. El diff del notebook agrega celdas de §4.1 y cambia solo `s0-config` y `s0-configuracion` fuera de ellas, sin salidas. No probado en PyCharm, Linux, Windows ni WSL. | P1 integra T4 y avisa a P3 (T7). |
 | 2026-11-26 | P1 (integración) | Integrada en `main` la rama `p1/t4-l2`. Las verificaciones son las de la fila anterior. | P3 cierra T7; luego T8. |
+| 2026-11-26 | P1 (revisión de P2 de T1a y T1b, rama `p1/t1-revision-p2`) | **(1) Recorte con momentum:** reproducida la observación de P2 (peso aislado con α = 0.1 y γ = 0.9: `v` llega a unos 2.9 α y el peso queda 7 épocas en el límite después de invertirse el gradiente; con γ = 0 sale en el primer paso) y medido su alcance en §4.1: con la configuración elegida, unos dos tercios de `W_o` y entre un cuarto y dos quintos de `W_s` están en ±1 entre las épocas 25 y 100 (partición 4000, sin L2; exploración fuera del notebook). Acordado con P1 documentarlo sin cambiar el código: párrafo «Recorte y momentum» en `s1-derivacion`, prueba `test_recorte_conserva_el_momentum` en `s1-pruebas` (21 pruebas en §1) y su fila en `s1-pruebas-descripcion`; `s4-1-corridas` registra `W_o_en_limite` y `W_s_en_limite` por corrida y `s4-1-analisis` lo agrega al guion de T8. **(2)** Quitada de `s2-planteamiento` la frase sin respaldo sobre K = 2 frente a K = 1. Notebook completo ejecutado con `TP3_QUICK=1` desde un kernel limpio en macOS arm64: 21/21 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos), 10/10 de §4.1, 16/16 de §4.2 y 13/13 de §4.3; las métricas de §4.1 coinciden con la ejecución reducida anterior (solo se agregan columnas). No se repitió la ejecución completa; la hará T8. Sin salidas en el notebook. | T8. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
