@@ -1,12 +1,13 @@
 # Journal y pendientes del TP3
 
-Estado al **23 de noviembre de 2026**: T0 (acuerdos, contratos, entorno fijado
-y configuración común), T1a (clase `Multilayer_perceptron` de §1) y T1b (XOR de
-§2) integradas en `main`; fase 1 en curso. En `main` están además la investigación de §3.2 b y el
+Estado al **26 de noviembre de 2026**: T0 (acuerdos, contratos, entorno fijado
+y configuración común), T1a (clase `Multilayer_perceptron` de §1), T1b (XOR de
+§2) y T4 (§4.1, clasificador UNSW-NB15 y decisión sobre L2: `USE_L2 = False`)
+integradas en `main`. En `main` están además la investigación de §3.2 b y el
 ECE de §4.3. T3 (preparación de datos UNSW-NB15, P3) está integrada en `main` (2026-11-25):
 los dos CSV de UNSW-NB15 están versionados en `data/raw/unsw_nb15/`. T2a y T2b (§3, P2) están
-integradas en `main` (2026-11-26). T5 (§4.2 ensamble, P3) está lista en la rama `p3/t5-ensamble`
-(2026-11-26).
+integradas en `main` (2026-11-26). T5 (§4.2 ensamble, P3) está en `main` (merge `72d7d36`,
+2026-11-26).
 Fecha indicada por el enunciado: **domingo 29 de noviembre de 2026**, sin hora.
 
 Este archivo es la fuente del estado de trabajo. Leerlo antes de empezar una
@@ -31,18 +32,20 @@ El encabezado de §4 anuncia 60 puntos, pero sus incisos suman 50; ver D7.
 
 | Persona | Tarea | Rama | Estado |
 | --- | --- | --- | --- |
-| P1 | T4 | `p1/t4-l2` | En desarrollo desde el 2026-11-26: §4.1, clasificador UNSW-NB15 y comparación con y sin L2. T1a y T1b integradas en `main` el 2026-11-23 |
+| P1 | T8 (siguiente) | — | T4 integrada en `main` el 2026-11-26 (`USE_L2 = False`). Pendientes propios: observaciones de P2 sobre T1a y T1b, y los análisis con números de §2 y §4.1 en T8 |
 | P2 | Revisiones (T5 y T7) | — | D10 aceptada por P1 y P3 y su revisión integrada en `main` el 2026-11-26. T2a y T2b integradas en `main` el 2026-11-26 (§3 completa; los números del análisis se revisan en T8). Entorno fijado, nbdime y PyCharm (ciclo *Clear All Outputs* incluido) comprobados en Linux x86_64. Entorno fijado y nbdime comprobados en Windows 11 el 2026-11-26: SciPy ya no está bloqueado y el notebook completo se ejecuta sin errores |
 | P3 | T5 (lista para integrar); luego T7 | `p3/t5-ensamble` | Reservada el 2026-11-26. T5 terminada y verificada en la rama (ver registro); D11 registrada para revisión de P2. T3 integrada en `main` el 2026-11-25. Entorno fijado, nbdime y PyCharm configurados en Linux (Steam Deck) |
 
-- **Siguiente acción:** §3 (T2a y T2b) y la revisión de D10 ya están en `main`; D10 está aceptada. P2 ya
+- **Siguiente acción:** T4 está en `main` y fija `USE_L2 = False` en `s0-config`: P3 puede cerrar T7
+  con esa decisión (y actualizar el comentario de `s4-2-demostracion`, que todavía dice «sin L2
+  mientras sea None»). Con T7 en `main` empieza T8 (P1 integra). §3 (T2a y T2b) y la revisión de D10 ya están en `main`; D10 está aceptada. P2 ya
   comprobó el entorno fijado en Linux (con PyCharm) y en Windows, donde SciPy ya carga
-  (casilla de T0). T3 ya está en `main`, así que P1 puede hacer T4: los dos CSV
-  llegan con el pull, en `data/raw/unsw_nb15/`; revisar D9 (duplicados). **Ojo:** `main` se
+  (casilla de T0). Los dos CSV de T3 llegan con el pull, en `data/raw/unsw_nb15/`; revisar D9
+  (duplicados). **Ojo:** `main` se
   reescribió el 2026-11-25 (ver registro); quien haya hecho pull antes debe ejecutar
-  `git fetch origin` y `git reset --hard origin/main` (sin cambios locales pendientes). Sigue abierta T4 (P1). T5 (P3) está lista en
-  `p3/t5-ensamble`: P2 revisa D11 y el contrato ensamble → ECE resuelto en T5; luego P3 sigue con
-  T7, que espera T4 solo para la decisión de L2. T1b, T2a y T2b ya están en `main`.
+  `git fetch origin` y `git reset --hard origin/main` (sin cambios locales pendientes). T5 (P3) ya
+  está en `main`: P2 revisa D11 y el contrato ensamble → ECE resuelto en T5. T1b, T2a, T2b y T4 ya
+  están en `main`.
 - **Integración a `main`:** libre. Solo una persona integra a la vez y lo
   avisa al equipo antes de empezar (ver `CONTRIBUTING.md`).
 
@@ -239,6 +242,14 @@ registrar el nuevo acuerdo aquí y avisar a quien dependa de ellos.
   la opción más simple, sin L2.
 - **Alcance:** la decisión se guarda en `USE_L2` y se aplica también a los
   ensambles de §4.2 y §4.4.
+- **Resuelto en T4 (2026-11-26):** salida K = 1 (D3). Calibración una vez por tratamiento, con la
+  misma rejilla (M ∈ {10, 20}, α ∈ {0.01, 0.1, 0.5}, γ ∈ {0, 0.9}, `max_weights` = 1, 100 épocas;
+  12 configuraciones), sobre una validación estratificada 80/20 dentro del entrenamiento de la
+  partición 4000 (semilla `SEEDS["s4_1_l2"]`), eligiendo el mayor F1 de validación. Corridas de 100
+  épocas; semilla de pesos de la corrida i = `SEEDS["s4_1_l2"] + 100 + i`. Wilcoxon bilateral y se
+  usa L2 solo si p < 0.05 y la mediana de las diferencias es positiva. Resultado: ambos tratamientos
+  eligieron M = 20, α = 0.1, γ = 0.9 (pesos iniciales idénticos en cada par); F1 medio 0.9427 sin L2
+  y 0.9382 con L2; L2 fue peor en las 30 corridas (Wilcoxon p = 1.9·10⁻⁹). **`USE_L2 = False`.**
 
 ### Ensamble → ECE (§4.2 → §4.3 y §4.4)
 
@@ -269,7 +280,7 @@ directorio de trabajo, por lo que el kernel puede arrancar en la raíz o en
 `notebooks/`), las rutas `DATA_RAW_DIR`, `DATA_PROCESSED_DIR`, `UNSW_DIR`,
 `RESULTS_FIGURES_DIR` y `RESULTS_TABLES_DIR`, una semilla por sección en
 `SEEDS`, el modo reducido `QUICK` (variable de entorno `TP3_QUICK=1`) con
-`quick_or_full(reducido, completo)` y `USE_L2 = None` hasta T4. También imprime
+`quick_or_full(reducido, completo)` y `USE_L2` (`None` hasta T4; `False` desde T4, 2026-11-26). También imprime
 las versiones del entorno. Cada sección ejecuta solo sus propias pruebas con un
 `unittest.TestSuite` explícito, como §4.3, con nombres de clases que no se
 repiten entre secciones.
@@ -425,16 +436,20 @@ repiten entre secciones.
 
 ### T4 — P1: UNSW-NB15 y comparación de normalización L2 (fase 2, requiere T1a y T3)
 
-- [ ] Calibrar los hiperparámetros de cada tratamiento con el mismo
+- [x] Calibrar los hiperparámetros de cada tratamiento con el mismo
   presupuesto, sobre una validación separada del entrenamiento, y documentar
-  el proceso.
-- [ ] Comparar con L2 y sin L2 en 30 corridas emparejadas (misma partición y
-  mismos pesos iniciales). Reportar F1 de la clase ataque y tasa de aciertos.
-- [ ] Aplicar Wilcoxon de rangos con signo (y la prueba t pareada como
+  el proceso (`s4-1-calibracion`, `s4-1-curvas`).
+- [x] Comparar con L2 y sin L2 en 30 corridas emparejadas (misma partición y
+  mismos pesos iniciales). Reportar F1 de la clase ataque y tasa de aciertos
+  (`s4-1-corridas`).
+- [x] Aplicar Wilcoxon de rangos con signo (y la prueba t pareada como
   complemento), documentar supuestos y resultados, y decidir con la regla
-  acordada si usar L2 en el resto del proyecto.
-- [ ] Registrar la decisión en la configuración común, ejecutar desde cero,
-  integrar en `main` y avisar a P3.
+  acordada si usar L2 en el resto del proyecto (`s4-1-comparacion`): sin L2.
+- [x] Registrar la decisión en la configuración común (`USE_L2 = False`),
+  ejecutar desde cero e integrar en `main` (2026-11-26).
+- [ ] Avisar a P3 de la decisión (T7).
+- [ ] Redactar en T8 el análisis con números (`s4-1-analisis`), con la
+  ejecución final.
 
 ### T5 — P3: ensamble y cuantificación de incertidumbre (fase 1)
 
@@ -560,6 +575,8 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 - Ensamble de §4.2 (T5, D11): miembros de mínimos cuadrados con una salida y objetivos ±1, solución de
   norma mínima (`lstsq`), particiones disjuntas aleatorias con `SEEDS["s4_2_ensamble"]`, `model` =
   ensamble entrenado y predicción por el signo del puntaje medio.
+- §4.1 (T4): sin normalización L2 (`USE_L2 = False`), decidido con la regla de T0 sobre 30 corridas
+  emparejadas; K = 1 y calibración única por tratamiento con la misma rejilla.
 - XOR de §2 (T1b): K = 2 one-hot; error cero = 0 errores de clasificación y
   MSE ≤ 0.01 sostenidos hasta el final; 36 configuraciones × 20 semillas.
 - R² de §3 (T2a y T2b): `make_blobs` y `make_moons` con 300 muestras y separabilidad comprobada
@@ -593,6 +610,8 @@ indicadas del PDF; cada fila indica si ya hay acuerdo.
 | 2026-11-26 | P2 (integración) | Integrada en `main` la rama `p2/t2-d10`, sin conflictos: `main` no había cambiado desde la creación de la rama (`8667828`). P1 y P3 aceptaron D10. Las verificaciones son las de la fila anterior; las celdas integradas son idénticas a las ejecutadas. | T8 revisa los números de `s3-analisis`, incluida la sensibilidad a `max_weights`. |
 | 2026-11-26 | P2 (entorno en Windows) | Python 3.15.0 de 64 bits instalado en Windows 11 (AMD64) con el administrador de instalaciones de Python (`py install 3.15.0-64`); se borró el `.venv` anterior (Python 3.14.7) y se creó uno nuevo con `requirements.txt`. `pip check` sale limpio y `nbdime config-git --enable` está hecho. **SciPy ya no está bloqueado:** SciPy 1.18.1 y scikit-learn 1.9.1 se importan, incluido `scipy.stats.wilcoxon`; el bloqueo de la DLL `_fblas` registrado el 2026-11-20 (con Python 3.14.7) no se repite; no se averiguó qué lo eliminó. Notebook completo ejecutado desde un kernel limpio con `jupyter nbconvert --execute`, sin `TP3_QUICK` (unos 2 min 16 s; salida fuera del repositorio), sin errores en ninguna celda: `s0-config` imprime Python 3.15.0 y las versiones fijadas; 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos) y 13/13 de §4.3. Resultados iguales a los de Linux y macOS: §2 elige M = 4, `max_weights` = 2, α = 0.5, γ = 0 (20/20 semillas, época 38); §3 elige `max_weights` = 1 con la misma sensibilidad al criterio; §4 cuenta 103 575 filas duplicadas (40.2 %). No se probó PyCharm en Windows. | Ninguno para T0 por parte de P2; P2 revisa T5 y T7 cuando lleguen. |
 | 2026-11-26 | P3 (T5, rama `p3/t5-ensamble`) | Revisado el material de apoyo (§2: N particiones, un modelo por partición, varianza con N − 1) y registrado D11. Prueba exploratoria previa, no registrada como resultado, sobre la partición 70/30 de semilla 4500 con N ∈ {10, 100, 1000}: norma mínima y ridge λ = 1 dieron aciertos (~0.90) y ECE (~0.09) casi iguales, y XᵀX es singular. Implementadas en §4.2 las celdas `s4-2-descripcion` (método, D11 y referencia a Bishop 2006, §4.1.3), `s4-2-funciones` (`train_ensemble`, `run_ensemble_uq`, `quantify_uncertainty_ensemble` y cinco auxiliares), `s4-2-pruebas-descripcion`, `s4-2-pruebas` (16 pruebas con datos sintéticos y ensambles armados a mano), `s4-2-demostracion-descripcion` y `s4-2-demostracion` (N = 10 sobre UNSW-NB15, `l2=False` mientras `USE_L2` sea `None`). Para comprobar que las pruebas detectan errores, se introdujeron a propósito diez errores (varianza entre N, objetivos 0/1, puntajes con activación, sesgo al final, particiones con reemplazo, miembros con todos los datos, ridge, predicción constante, N sin validar y bloques mal indexados): cada uno hizo fallar al menos una prueba. La prueba de compatibilidad con el ECE no lo llama, porque §4.3 está después de §4.2 en el notebook. Notebook completo (idéntico byte a byte al de la rama) ejecutado desde un kernel limpio en Linux x86_64 con `ExecutePreprocessor` de nbconvert, sin `TP3_QUICK` (unos 3 min 20 s; salida fuera del repositorio): 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos), 16/16 de §4.2 y 13/13 de §4.3, sin advertencias. `s4-2-demostracion` se ejecutó sin errores: entrenamiento en 1.1 s y evaluación de 77 302 observaciones en 0.04 s; la varianza media de las predicciones incorrectas es mayor que la de las correctas. El diff del notebook solo agrega celdas de §4.2, sin salidas. | P3 integra T5; P2 revisa D11. P3 sigue con T7. |
+| 2026-11-26 | P1 (T4, rama `p1/t4-l2`) | Implementado §4.1 con la red de §1 y la preparación de datos de T3: celdas `s4-1-planteamiento` (protocolo y limitaciones: calibración compartida y duplicados de D9), `s4-1-funciones-descripcion`, `s4-1-funciones` (`s4_1_metricas`, `s4_1_entrenar_y_evaluar`, `s4_1_comparar`), `s4-1-pruebas` (10 pruebas), `s4-1-calibracion-descripcion`, `s4-1-calibracion`, `s4-1-curvas`, `s4-1-corridas-descripcion`, `s4-1-corridas`, `s4-1-comparacion-descripcion`, `s4-1-comparacion` y `s4-1-analisis` (pendiente de T8). Acordados con P1 la calibración única por tratamiento, 100 épocas y K = 1 (ver «Resuelto en T4»). Antes se midió el costo (unos 0.1 s por época con 206 138 × 195) y se exploró el F1 de validación por época para fijar la rejilla y las épocas; esa exploración no se registra como resultado. Notebook completo ejecutado desde un kernel limpio en macOS arm64 (Apple M2 Pro) con `jupyter nbconvert --execute`, sin `TP3_QUICK` (17 min 47 s; calibración 232 s y corridas 719 s; salida fuera del repositorio), con `USE_L2 = None`: 20/20 pruebas de §1, 8/8 de §2, 15/15 de §3, 21/21 de §4 (datos), 10/10 de §4.1, 16/16 de §4.2 y 13/13 de §4.3. Ambos tratamientos eligieron M = 20, α = 0.1, γ = 0.9; F1 de la clase ataque 0.9427 ± 0.0020 sin L2 y 0.9382 ± 0.0020 con L2; tasa de aciertos 0.9262 y 0.9197; L2 fue peor en las 30 corridas (mediana de la diferencia de F1 −0.0044; Wilcoxon W = 0, p = 1.9·10⁻⁹; t pareada p = 9.8·10⁻¹³; Shapiro-Wilk de las diferencias p = 0.19). Con la regla de T0, `USE_L2 = False` en `s0-config`; en `s0-configuracion` se actualizaron la nota de L2 y la frase de que los CSV quedan fuera de Git (observación (3) de la revisión de P2). Después de ese cambio, notebook completo ejecutado con `TP3_QUICK=1` (1 min 7 s): todas las pruebas correctas, la decisión coincide con `USE_L2` y §4.2 usa `l2=False`. El diff del notebook agrega celdas de §4.1 y cambia solo `s0-config` y `s0-configuracion` fuera de ellas, sin salidas. No probado en PyCharm, Linux, Windows ni WSL. | P1 integra T4 y avisa a P3 (T7). |
+| 2026-11-26 | P1 (integración) | Integrada en `main` la rama `p1/t4-l2`. Las verificaciones son las de la fila anterior. | P3 cierra T7; luego T8. |
 
 Al integrar cada tarea, agregar una fila y actualizar las casillas, el trabajo
 en curso y los acuerdos. Registrar las verificaciones realmente ejecutadas y
